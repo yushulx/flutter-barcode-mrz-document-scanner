@@ -1,13 +1,10 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'camera/camera_manager.dart';
 import 'global.dart';
-import 'dart:math';
 
 import 'result_page.dart';
+import 'setting_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -118,6 +115,24 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
               'Barcode Scanner',
               style: TextStyle(color: Colors.white),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: IconButton(
+                  onPressed: () {
+                    _cameraManager.pauseCamera();
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SettingPage()))
+                        .then((value) {
+                      _cameraManager.resumeCamera();
+                    });
+                  },
+                  icon: const Icon(Icons.settings, color: Colors.white),
+                ),
+              )
+            ],
           ),
           body: Stack(
             children: <Widget>[

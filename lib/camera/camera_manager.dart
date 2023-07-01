@@ -46,6 +46,14 @@ class CameraManager {
     toggleCamera(cameraIndex);
   }
 
+  void resumeCamera() {
+    toggleCamera(cameraIndex);
+  }
+
+  void pauseCamera() {
+    stopVideo();
+  }
+
   Future<void> stopVideo() async {
     if (controller == null) return;
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {

@@ -41,19 +41,9 @@ class _ResultPageState extends State<ResultPage> {
             itemCount: widget.barcodeResults.length,
             itemBuilder: (context, index) {
               return MyCustomWidget(
-                  index: index,
-                  result: widget.barcodeResults[index],
-                  cbDeleted: () async {
-                    widget.barcodeResults.removeAt(index);
-                    final SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    List<String> data =
-                        prefs.getStringList('barcode_data') as List<String>;
-                    data.removeAt(index);
-                    prefs.setStringList('barcode_data', data);
-                    setState(() {});
-                  },
-                  cbOpenResultPage: () {});
+                index: index,
+                result: widget.barcodeResults[index],
+              );
             }));
 
     final button = Row(
@@ -96,7 +86,7 @@ class _ResultPageState extends State<ResultPage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            backgroundColor: colorMainTheme,
             title: const Text(
               'Results',
               style: TextStyle(color: Colors.white),
@@ -134,16 +124,12 @@ class _ResultPageState extends State<ResultPage> {
 
 class MyCustomWidget extends StatelessWidget {
   final BarcodeResult result;
-  final Function cbDeleted;
-  final Function cbOpenResultPage;
   final int index;
 
   const MyCustomWidget({
     super.key,
     required this.index,
     required this.result,
-    required this.cbDeleted,
-    required this.cbOpenResultPage,
   });
 
   @override
