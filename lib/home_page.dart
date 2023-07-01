@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       File rotatedImage =
           await FlutterExifRotation.rotateImage(path: photo.path);
       photo = XFile(rotatedImage.path);
