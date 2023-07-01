@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_sdk/dynamsoft_barcode.dart';
 import 'global.dart';
 import 'result_page.dart';
@@ -181,13 +182,10 @@ class MyCustomWidget extends StatelessWidget {
                           // delete
                           cbDeleted();
                         } else if (selected == 1) {
-                          // share
-                          Map<String, dynamic> jsonObject = result.toJson();
-                          String jsonString = jsonEncode(jsonObject);
-                          Share.share(jsonString);
-                        } else {
-                          // view
-                          cbOpenResultPage();
+                          // copy
+                          Clipboard.setData(ClipboardData(
+                              text:
+                                  'Format: ${result.format}, Text: ${result.text}'));
                         }
                       }
                     },

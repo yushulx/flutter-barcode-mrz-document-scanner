@@ -31,3 +31,5 @@ A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https:
     # flutter run -d linux
     ```
     
+## Try Online Demo
+[https://yushulx.me/flutter-barcode-scanner/](https://yushulx.me/flutter-barcode-scanner/)

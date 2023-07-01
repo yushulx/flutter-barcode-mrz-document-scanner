@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_sdk/dynamsoft_barcode.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,7 +105,14 @@ class _ResultPageState extends State<ResultPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String result = '';
+                    for (BarcodeResult barcodeResult in widget.barcodeResults) {
+                      result +=
+                          'Format: ${barcodeResult.format}, Text: ${barcodeResult.text}\n';
+                    }
+                    Share.share(result);
+                  },
                   icon: const Icon(Icons.share, color: Colors.white),
                 ),
               )
@@ -163,7 +171,7 @@ class MyCustomWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 100,
+                      width: MediaQuery.of(context).size.width - 110,
                       child: Text(
                         'Text: ${result.text}',
                         style: const TextStyle(
@@ -175,7 +183,15 @@ class MyCustomWidget extends StatelessWidget {
                   ],
                 ),
                 Expanded(child: Container()),
-                Text('Copy', style: TextStyle(color: colorGreen, fontSize: 14)),
+                InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(
+                        text:
+                            'Format: ${result.format}, Text: ${result.text}'));
+                  },
+                  child: Text('Copy',
+                      style: TextStyle(color: colorGreen, fontSize: 14)),
+                ),
               ],
             )));
   }
