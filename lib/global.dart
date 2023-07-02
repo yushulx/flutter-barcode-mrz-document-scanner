@@ -3,6 +3,7 @@ import 'package:flutter_barcode_sdk/dynamsoft_barcode.dart';
 import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
 
 FlutterBarcodeSdk barcodeReader = FlutterBarcodeSdk();
+bool isLicenseValid = false;
 
 class Item {
   Item({
@@ -150,6 +151,7 @@ Future<void> updateFormats() async {
 Future<int> initBarcodeSDK() async {
   int ret = await barcodeReader.setLicense(
       'DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==');
+  if (ret == 0) isLicenseValid = true;
   await barcodeReader.init();
   await barcodeReader.setBarcodeFormats(BarcodeFormat.ALL);
   return ret;
