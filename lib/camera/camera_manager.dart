@@ -241,7 +241,7 @@ class CameraManager {
   Future<void> toggleCamera(int index) async {
     // if (controller != null) controller!.dispose();
 
-    controller = CameraController(_cameras[index], ResolutionPreset.high);
+    controller = CameraController(_cameras[index], ResolutionPreset.medium);
     controller!.initialize().then((_) {
       if (!cbIsMounted()) {
         return;
