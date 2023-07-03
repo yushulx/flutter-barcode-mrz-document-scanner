@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'camera/camera_manager.dart';
@@ -69,17 +72,19 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   List<Widget> createCameraPreview() {
     if (_cameraManager.controller != null &&
         _cameraManager.previewSize != null) {
+      double width = _cameraManager.previewSize!.width;
+      double height = _cameraManager.previewSize!.height;
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        if (MediaQuery.of(context).size.width <
+            MediaQuery.of(context).size.height) {
+          width = _cameraManager.previewSize!.height;
+          height = _cameraManager.previewSize!.width;
+        }
+      }
+
       return [
         SizedBox(
-            width: MediaQuery.of(context).size.width <
-                    MediaQuery.of(context).size.height
-                ? _cameraManager.previewSize!.height
-                : _cameraManager.previewSize!.width,
-            height: MediaQuery.of(context).size.width <
-                    MediaQuery.of(context).size.height
-                ? _cameraManager.previewSize!.width
-                : _cameraManager.previewSize!.height,
-            child: _cameraManager.getPreview()),
+            width: width, height: height, child: _cameraManager.getPreview()),
         Positioned(
           top: 0.0,
           right: 0.0,
