@@ -25,6 +25,7 @@ class CameraManager {
   StreamSubscription<FrameAvailabledEvent>? _frameAvailableStreamSubscription;
   int cameraIndex = 0;
   bool isReadyToGo = false;
+  bool _isWebFrameStarted = false;
 
   CameraManager(
       {required this.context,
@@ -40,9 +41,14 @@ class CameraManager {
     initCamera();
   }
 
-  void switchCamera() {
+  Future<void> switchCamera() async {
     if (_cameras.length == 1) return;
     isFinished = true;
+
+    if (kIsWeb) {
+      await waitForStop();
+    }
+
     cameraIndex = cameraIndex == 0 ? 1 : 0;
     toggleCamera(cameraIndex);
   }
@@ -55,7 +61,21 @@ class CameraManager {
     stopVideo();
   }
 
+  Future<void> waitForStop() async {
+    while (true) {
+      if (_isWebFrameStarted == false) {
+        break;
+      }
+
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
+  }
+
   Future<void> stopVideo() async {
+    isFinished = true;
+    if (kIsWeb) {
+      await waitForStop();
+    }
     if (controller == null) return;
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       await controller!.stopImageStream();
@@ -69,22 +89,26 @@ class CameraManager {
   }
 
   Future<void> webCamera() async {
-    if (controller == null || isFinished || cbIsMounted() == false) return;
+    _isWebFrameStarted = true;
+    while (!(controller == null || isFinished || cbIsMounted() == false)) {
+      XFile? file = await controller?.takePicture();
+      // calculate elapsed time
+      if (file != null) {
+        // var start = DateTime.now().millisecondsSinceEpoch;
+        var results = await barcodeReader.decodeFile(file.path);
+        // var end = DateTime.now().millisecondsSinceEpoch;
+        // print('decodeFile time: ${end - start}');
+        if (!cbIsMounted()) break;
 
-    XFile file = await controller!.takePicture();
+        barcodeResults = results;
+      }
 
-    var results = await barcodeReader.decodeFile(file.path);
-    if (!cbIsMounted()) return;
-
-    barcodeResults = results;
-    cbRefreshUi();
-    if (isReadyToGo) {
-      handleBarcode(results);
+      cbRefreshUi();
+      if (isReadyToGo && barcodeResults != null) {
+        handleBarcode(barcodeResults!);
+      }
     }
-
-    if (!isFinished) {
-      webCamera();
-    }
+    _isWebFrameStarted = false;
   }
 
   void handleBarcode(List<BarcodeResult> results) {

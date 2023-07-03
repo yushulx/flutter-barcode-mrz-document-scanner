@@ -24,6 +24,10 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    if (kIsWeb) {
+      barcodeReader.setParameters(scannerTemplate);
+    }
+
     _cameraManager = CameraManager(
         context: context,
         cbRefreshUi: refreshUI,

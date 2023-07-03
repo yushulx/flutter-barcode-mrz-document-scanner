@@ -4,6 +4,234 @@ import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
 
 FlutterBarcodeSdk barcodeReader = FlutterBarcodeSdk();
 bool isLicenseValid = false;
+String readerTemplate = '';
+String scannerTemplate = '''
+{
+    "FormatSpecification": {
+        "AllModuleDeviation": 0,
+        "AustralianPostEncodingTable": "C",
+        "BarcodeAngleRangeArray": null,
+        "BarcodeBytesLengthRangeArray": [
+            {
+                "MaxValue": 2147483647,
+                "MinValue": 0
+            }
+        ],
+        "BarcodeBytesRegExPattern": "",
+        "BarcodeComplementModes": null,
+        "BarcodeFormatIds": [
+            "BF_ALL"
+        ],
+        "BarcodeFormatIds_2": [
+            "BF2_ALL"
+        ],
+        "BarcodeHeightRangeArray": null,
+        "BarcodeTextLengthRangeArray": [
+            {
+                "MaxValue": 2147483647,
+                "MinValue": 0
+            }
+        ],
+        "BarcodeTextRegExPattern": "",
+        "BarcodeWidthRangeArray": null,
+        "BarcodeZoneBarCountRangeArray": null,
+        "BarcodeZoneMinDistanceToImageBorders": 0,
+        "Code128Subset": "",
+        "DeblurLevel": 9,
+        "DeformationResistingModes": null,
+        "EnableDataMatrixECC000-140": 0,
+        "EnableQRCodeModel1": 0,
+        "FindUnevenModuleBarcode": 1,
+        "HeadModuleRatio": "",
+        "MSICodeCheckDigitCalculation": "MSICCDC_MOD_10",
+        "MinQuietZoneWidth": 4,
+        "MinRatioOfBarcodeZoneWidthToHeight": 0,
+        "MinResultConfidence": 30,
+        "MirrorMode": "MM_NORMAL",
+        "ModuleSizeRangeArray": null,
+        "Name": "defaultFormatParameterForAllBarcodeFormat",
+        "PartitionModes": [
+            "PM_WHOLE_BARCODE",
+            "PM_ALIGNMENT_PARTITION"
+        ],
+        "PatchCodeSearchingMargins": {
+            "Bottom": 20,
+            "Left": 20,
+            "MeasuredByPercentage": 1,
+            "Right": 20,
+            "Top": 20
+        },
+        "RequireStartStopChars": 1,
+        "ReturnPartialBarcodeValue": 1,
+        "StandardFormat": "",
+        "TailModuleRatio": "",
+        "VerifyCheckDigit": 0
+    },
+    "ImageParameter": {
+        "BarcodeColourModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "LightReflection": 1,
+                "Mode": "BICM_DARK_ON_LIGHT"
+            }
+        ],
+        "BarcodeComplementModes": [
+            {
+                "Mode": "BCM_SKIP"
+            }
+        ],
+        "BarcodeFormatIds": [
+            "BF_ALL"
+        ],
+        "BarcodeFormatIds_2": [
+            "BF2_NULL"
+        ],
+        "BinarizationModes": [
+            {
+                "BlockSizeX": 71,
+                "BlockSizeY": 71,
+                "EnableFillBinaryVacancy": 0,
+                "ImagePreprocessingModesIndex": -1,
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "BM_LOCAL_BLOCK",
+                "ThresholdCompensation": 10
+            }
+        ],
+        "ColourClusteringModes": [
+            {
+                "Mode": "CCM_SKIP"
+            }
+        ],
+        "ColourConversionModes": [
+            {
+                "BlueChannelWeight": -1,
+                "GreenChannelWeight": -1,
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "CICM_GENERAL",
+                "RedChannelWeight": -1
+            }
+        ],
+        "DPMCodeReadingModes": [
+            {
+                "Mode": "DPMCRM_SKIP"
+            }
+        ],
+        "DeblurLevel": 0,
+        "DeblurModes": null,
+        "DeformationResistingModes": [
+            {
+                "Mode": "DRM_SKIP"
+            }
+        ],
+        "Description": "",
+        "ExpectedBarcodesCount": 0,
+        "FormatSpecificationNameArray": [
+            "defaultFormatParameterForAllBarcodeFormat"
+        ],
+        "GrayscaleTransformationModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "GTM_ORIGINAL"
+            }
+        ],
+        "ImagePreprocessingModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "IPM_GENERAL"
+            }
+        ],
+        "IntermediateResultSavingMode": {
+            "Mode": "IRSM_MEMORY"
+        },
+        "IntermediateResultTypes": [
+            "IRT_NO_RESULT"
+        ],
+        "LocalizationModes": [
+            {
+                "IsOneDStacked": 0,
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "LM_SCAN_DIRECTLY",
+                "ScanDirection": 2,
+                "ScanStride": 0
+            },
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "LM_CONNECTED_BLOCKS"
+            }
+        ],
+        "MaxAlgorithmThreadCount": 1,
+        "Name": "default",
+        "PDFRasterDPI": 300,
+        "PDFReadingMode": {
+            "Mode": "PDFRM_AUTO"
+        },
+        "Pages": "",
+        "RegionDefinitionNameArray": null,
+        "RegionPredetectionModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "RPM_GENERAL"
+            }
+        ],
+        "ResultCoordinateType": "RCT_PIXEL",
+        "ReturnBarcodeZoneClarity": 0,
+        "ScaleDownThreshold": 2300,
+        "ScaleUpModes": [
+            {
+                "Mode": "SUM_AUTO"
+            }
+        ],
+        "TerminatePhase": "TP_BARCODE_RECOGNIZED",
+        "TextAssistedCorrectionMode": {
+            "BottomTextPercentageSize": 0,
+            "LeftTextPercentageSize": 0,
+            "LibraryFileName": "",
+            "LibraryParameters": "",
+            "Mode": "TACM_VERIFYING",
+            "RightTextPercentageSize": 0,
+            "TopTextPercentageSize": 0
+        },
+        "TextFilterModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "MinImageDimension": 65536,
+                "Mode": "TFM_GENERAL_CONTOUR",
+                "Sensitivity": 0
+            }
+        ],
+        "TextResultOrderModes": [
+            {
+                "Mode": "TROM_CONFIDENCE"
+            },
+            {
+                "Mode": "TROM_POSITION"
+            },
+            {
+                "Mode": "TROM_FORMAT"
+            }
+        ],
+        "TextureDetectionModes": [
+            {
+                "LibraryFileName": "",
+                "LibraryParameters": "",
+                "Mode": "TDM_GENERAL_WIDTH_CONCENTRATION",
+                "Sensitivity": 5
+            }
+        ],
+        "Timeout": 10000
+    },
+    "Version": "3.0"
+}
+''';
 
 class Item {
   Item({
@@ -154,6 +382,7 @@ Future<int> initBarcodeSDK() async {
   if (ret == 0) isLicenseValid = true;
   await barcodeReader.init();
   await barcodeReader.setBarcodeFormats(BarcodeFormat.ALL);
+  readerTemplate = await barcodeReader.getParameters();
   return ret;
 }
 
