@@ -42,6 +42,7 @@ class CameraManager {
 
   void switchCamera() {
     if (_cameras.length == 1) return;
+    isFinished = true;
     cameraIndex = cameraIndex == 0 ? 1 : 0;
     toggleCamera(cameraIndex);
   }
@@ -73,11 +74,13 @@ class CameraManager {
     XFile file = await controller!.takePicture();
 
     var results = await barcodeReader.decodeFile(file.path);
-    if (results.isEmpty || !cbIsMounted()) return;
+    if (!cbIsMounted()) return;
 
     barcodeResults = results;
     cbRefreshUi();
-    handleBarcode(results);
+    if (isReadyToGo) {
+      handleBarcode(results);
+    }
 
     if (!isFinished) {
       webCamera();
