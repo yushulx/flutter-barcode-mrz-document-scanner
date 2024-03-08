@@ -265,9 +265,9 @@ class CameraManager {
   Future<void> toggleCamera(int index) async {
     // if (controller != null) controller!.dispose();
     ResolutionPreset preset = ResolutionPreset.high;
-    if (kIsWeb) {
-      preset = ResolutionPreset.medium;
-    }
+    // if (kIsWeb) {
+    //   preset = ResolutionPreset.medium;
+    // }
     controller = CameraController(_cameras[index], preset);
     controller!.initialize().then((_) {
       if (!cbIsMounted()) {
