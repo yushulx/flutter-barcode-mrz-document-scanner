@@ -268,7 +268,7 @@ class CameraManager {
     // if (kIsWeb) {
     //   preset = ResolutionPreset.medium;
     // }
-    controller = CameraController(_cameras[index], preset);
+    controller = CameraController(_cameras[index], preset, enableAudio: false);
     controller!.initialize().then((_) {
       if (!cbIsMounted()) {
         return;
