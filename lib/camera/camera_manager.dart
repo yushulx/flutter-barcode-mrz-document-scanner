@@ -227,6 +227,11 @@ class CameraManager {
       //     break;
       //   }
       // }
+
+      for (final CameraDescription cameraDescription in _cameras) {
+        print(cameraDescription.name);
+      }
+
       if (_cameras.isEmpty) return;
 
       if (!kIsWeb) {
@@ -262,30 +267,79 @@ class CameraManager {
     return CameraPreview(controller!);
   }
 
+  void showInSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _logError(String code, String? message) {
+    // ignore: avoid_print
+    print('Error: $code${message == null ? '' : '\nError Message: $message'}');
+  }
+
+  void _showCameraException(CameraException e) {
+    _logError(e.code, e.description);
+    showInSnackBar('Error: ${e.code}\n${e.description}');
+  }
+
   Future<void> toggleCamera(int index) async {
     // if (controller != null) controller!.dispose();
     ResolutionPreset preset = ResolutionPreset.high;
     // if (kIsWeb) {
     //   preset = ResolutionPreset.medium;
     // }
-    controller = CameraController(_cameras[index], preset, enableAudio: false);
-    controller!.initialize().then((_) {
-      if (!cbIsMounted()) {
-        return;
-      }
+    controller = CameraController(_cameras[index],
+        kIsWeb ? ResolutionPreset.max : preset,
+        enableAudio: false);
+    // controller!.initialize().then((_) {
+    //   if (!cbIsMounted()) {
+    //     return;
+    //   }
 
+    //   previewSize = controller!.value.previewSize;
+
+    //   startVideo();
+    // }).catchError((Object e) {
+    //   if (e is CameraException) {
+    //     switch (e.code) {
+    //       case 'CameraAccessDenied':
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    // });
+
+    try {
+      await controller!.initialize();
+    } on CameraException catch (e) {
+      switch (e.code) {
+        case 'CameraAccessDenied':
+          showInSnackBar('You have denied camera access.');
+        case 'CameraAccessDeniedWithoutPrompt':
+          // iOS only
+          showInSnackBar('Please go to Settings app to enable camera access.');
+        case 'CameraAccessRestricted':
+          // iOS only
+          showInSnackBar('Camera access is restricted.');
+        case 'AudioAccessDenied':
+          showInSnackBar('You have denied audio access.');
+        case 'AudioAccessDeniedWithoutPrompt':
+          // iOS only
+          showInSnackBar('Please go to Settings app to enable audio access.');
+        case 'AudioAccessRestricted':
+          // iOS only
+          showInSnackBar('Audio access is restricted.');
+        default:
+          _showCameraException(e);
+          break;
+      }
+    }
+
+    if (cbIsMounted()) {
       previewSize = controller!.value.previewSize;
 
       startVideo();
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            break;
-          default:
-            break;
-        }
-      }
-    });
+    }
   }
 }
