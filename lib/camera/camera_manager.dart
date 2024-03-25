@@ -47,6 +47,8 @@ class CameraManager {
 
     if (kIsWeb) {
       await waitForStop();
+      controller?.dispose();
+      controller = null;
     }
 
     cameraIndex = cameraIndex == 0 ? 1 : 0;
@@ -288,8 +290,8 @@ class CameraManager {
     // if (kIsWeb) {
     //   preset = ResolutionPreset.medium;
     // }
-    controller = CameraController(_cameras[index],
-        kIsWeb ? ResolutionPreset.max : preset,
+    controller = CameraController(
+        _cameras[index], kIsWeb ? ResolutionPreset.max : preset,
         enableAudio: false);
     // controller!.initialize().then((_) {
     //   if (!cbIsMounted()) {
@@ -312,6 +314,11 @@ class CameraManager {
 
     try {
       await controller!.initialize();
+      if (cbIsMounted()) {
+        previewSize = controller!.value.previewSize;
+
+        startVideo();
+      }
     } on CameraException catch (e) {
       switch (e.code) {
         case 'CameraAccessDenied':
@@ -334,12 +341,6 @@ class CameraManager {
           _showCameraException(e);
           break;
       }
-    }
-
-    if (cbIsMounted()) {
-      previewSize = controller!.value.previewSize;
-
-      startVideo();
     }
   }
 }
