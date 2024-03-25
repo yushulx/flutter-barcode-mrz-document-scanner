@@ -16,7 +16,7 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 class CameraManager {
   BuildContext context;
   CameraController? controller;
-  late List<CameraDescription> _cameras;
+  List<CameraDescription> _cameras = [];
   Size? previewSize;
   bool _isScanAvailable = true;
   List<BarcodeResult>? barcodeResults;
@@ -26,6 +26,8 @@ class CameraManager {
   int cameraIndex = 0;
   bool isReadyToGo = false;
   bool _isWebFrameStarted = false;
+  bool isFrontFound = false;
+  bool isBackFound = false;
 
   CameraManager(
       {required this.context,
@@ -219,19 +221,26 @@ class CameraManager {
   Future<void> initCamera() async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      _cameras = await availableCameras();
-      // int index = 0;
 
-      // for (; index < _cameras.length; index++) {
-      //   CameraDescription description = _cameras[index];
-      //   if (description.name.toLowerCase().contains('back')) {
-      //     _isMobileWeb = true;
-      //     break;
-      //   }
-      // }
+      List<CameraDescription> allCameras = await availableCameras();
 
-      for (final CameraDescription cameraDescription in _cameras) {
-        print(cameraDescription.name);
+      if (kIsWeb) {
+        for (final CameraDescription cameraDescription in allCameras) {
+          print(cameraDescription.name);
+          if (cameraDescription.name.toLowerCase().contains('front')) {
+            if (isFrontFound) continue;
+            isFrontFound = true;
+            _cameras.add(cameraDescription);
+          } else if (cameraDescription.name.toLowerCase().contains('back')) {
+            if (isBackFound) continue;
+            isBackFound = true;
+            _cameras.add(cameraDescription);
+          } else {
+            _cameras.add(cameraDescription);
+          }
+        }
+      } else {
+        _cameras = allCameras;
       }
 
       if (_cameras.isEmpty) return;
