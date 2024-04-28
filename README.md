@@ -1,41 +1,19 @@
-# Flutter Barcode Scanner
+# Flutter Barcode and QR Scanner Examples
 
-A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to scan 1D and 2D barcodes on Android, iOS, Windows, Linux, and web.
+This repository contains various Flutter barcode scanner projects implemented using different methods.
 
+## Examples
+- [Flutter Camera](examples/flutter_camera) (Dart only)
+    - Use the [camera](https://pub.dev/packages/camera) plugin to display camera preview and retrieve the camera frames. 
+    - Use the [flutter_barcode_sdk](https://pub.dev/packages/flutter_barcode_sdk) plugin to decode barcodes from the camera frames.
+    
+    https://github.com/yushulx/flutter-barcode-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778    
 
-
-https://github.com/yushulx/flutter-barcode-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778
-
-
-
-## Supported Platforms
-- **Web**
-- **Android**
-- **iOS**
-- **Windows**
-- **Linux** (Without camera support)
-
-## Getting Started
-1. Apply for a [30-day trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr) and replace the license key in the `global.dart` file with your own:
-
-    ```dart
-    Future<int> initBarcodeSDK() async {
-        int ret = await barcodeReader.setLicense(
-            'LICENSE-KEY');
-        await barcodeReader.init();
-        await barcodeReader.setBarcodeFormats(BarcodeFormat.ALL);
-        return ret;
-    }
-    ```
-
-2. Run the project:
-
-    ```
-    flutter run
-    # flutter run -d windows
-    # flutter run -d edge
-    # flutter run -d linux
-    ```
+- [Native Camera](examples/native_camera) (Dart and Kotlin)
+    - Implement the camera preview logic in native code. 
+    - Render the app UI in **Dart**.
+ 
+        <img src="https://www.dynamsoft.com/codepool/img/2024/04/flutter-qr-code-scanner-android-camera.jpg" width="240">
     
 ## Try Online Demo
 [https://yushulx.me/flutter-barcode-scanner/](https://yushulx.me/flutter-barcode-scanner/)
