@@ -3,7 +3,9 @@ package com.example.nativecamera
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import android.util.Size
 import android.view.Surface
+import android.view.Surface.ROTATION_0
 import android.widget.Toast
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
@@ -162,6 +164,12 @@ class MainActivity : FlutterActivity(), ActivityAware {
 
         val rotation = display!!.rotation
 
+        var resolutionSize = Size(previewWidth, previewHeight)
+
+        if (rotation == ROTATION_0 || rotation == Surface.ROTATION_180) {
+            resolutionSize = Size(previewHeight, previewWidth)
+        }
+
         // CameraProvider
         val cameraProvider =
                 provider ?: throw IllegalStateException("Camera initialization failed.")
@@ -174,14 +182,15 @@ class MainActivity : FlutterActivity(), ActivityAware {
         // Preview
         preview =
                 Preview.Builder()
-                        .setTargetAspectRatio(screenAspectRatio)
-                        .setTargetRotation(rotation)
+                        // .setTargetAspectRatio(screenAspectRatio)
+                        .setTargetResolution(resolutionSize)
+                         .setTargetRotation(rotation)
                         .build()
                         .also {
                             it.setSurfaceProvider { request ->
                                 val surfaceTexture =
                                         flutterTextureEntry?.surfaceTexture().apply {
-                                            this?.setDefaultBufferSize(previewWidth, previewHeight)
+                                            this?.setDefaultBufferSize(request.resolution.width, request.resolution.height)
                                         }
                                 val surface = Surface(surfaceTexture)
 
@@ -194,8 +203,9 @@ class MainActivity : FlutterActivity(), ActivityAware {
 
         imageAnalyzer =
                 ImageAnalysis.Builder()
-                        .setTargetAspectRatio(screenAspectRatio)
-                        .setTargetRotation(rotation)
+//                         .setTargetAspectRatio(screenAspectRatio)
+                        .setTargetResolution(resolutionSize)
+                         .setTargetRotation(rotation)
                         .build()
                         .also {
                             it.setAnalyzer(
