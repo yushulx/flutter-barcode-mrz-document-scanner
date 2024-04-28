@@ -14,7 +14,10 @@ jobs:
       with:
         channel: 'stable'
     - name: Get dependencies
-      run: flutter pub get
+      run: |
+        cd examples/flutter_camera
+        flutter pub get
     - uses: bluefireteam/flutter-gh-pages@v7
       with:
-          baseHref: /flutter-barcode-scanner/
+          baseHref: /examples/flutter_camera/flutter-barcode-scanner/
+
