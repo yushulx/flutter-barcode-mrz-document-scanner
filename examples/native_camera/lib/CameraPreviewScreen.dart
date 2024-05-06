@@ -30,15 +30,16 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 
   Future<void> _initializeCamera() async {
     try {
-      final int textureId = await platform.invokeMethod('startCamera');
-      final double previewWidth =
+      var textureId = await platform.invokeMethod('startCamera');
+      var previewWidth =
           await platform.invokeMethod('getPreviewWidth');
-      final double previewHeight =
+      var previewHeight =
           await platform.invokeMethod('getPreviewHeight');
+
       setState(() {
-        _textureId = textureId;
-        _previewWidth = previewWidth;
-        _previewHeight = previewHeight;
+        _textureId = textureId as int;
+        _previewWidth = previewWidth.toDouble();
+        _previewHeight = previewHeight.toDouble();
       });
     } catch (e) {
       print(e);
