@@ -9,7 +9,7 @@ This repository contains various Flutter barcode scanner projects implemented us
     
     https://github.com/yushulx/flutter-barcode-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778    
 
-- [Native Camera](examples/native_camera) (Dart and Kotlin for best performance)
+- [Native Camera](examples/native_camera) (Dart and Kotlin/Swift for best performance)
     - Implement the camera preview logic in native code. 
     - Render the app UI in **Dart**.
  
