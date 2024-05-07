@@ -46,3 +46,7 @@ Here are the steps:
 2. Find the method `func processImage(_ sampleBuffer: CMSampleBuffer)` and replace the code with your own image processing algorithms.
 3. Find the line `self.channel?.invokeMethod("onBarcodeDetected", arguments: self.wrapResults(results: results))` to send the results to Dart.
 4. Update the `CameraPreviewScreen.dart` file to handle the results.
+
+## Screenshots
+
+![Flutter iOS QR code scanner](https://www.dynamsoft.com/codepool/img/2024/05/ios-camera-flutter-qr-code-scanner.png)
