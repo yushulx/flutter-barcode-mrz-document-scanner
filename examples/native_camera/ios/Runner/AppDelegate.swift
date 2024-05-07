@@ -124,17 +124,30 @@ class CustomCameraTexture: NSObject, FlutterTexture {
     cameraSession?.addOutput(cameraOutput)
 
     self.customCameraTexture = CustomCameraTexture(cameraPreviewLayer: cameraPreviewLayer!, registry: flutterTextureEntry!)
-    
-    // let frame = window?.frame
-    // cameraPreviewLayer?.frame = frame!
-    // window?.layer.insertSublayer(cameraPreviewLayer!, at: 0)
-
     cameraSession?.startRunning()
 
     result(self.customCameraTexture?.textureId)
   }
 
+  func currentVideoOrientation() -> AVCaptureVideoOrientation {
+    switch UIDevice.current.orientation {
+    case .portrait:
+      return .portrait
+    case .portraitUpsideDown:
+      return .portraitUpsideDown
+    case .landscapeLeft:
+      return .landscapeRight
+    case .landscapeRight:
+      return .landscapeLeft
+    default:
+      return .portrait
+    }
+  }
+
   func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    if connection.isVideoOrientationSupported {
+      connection.videoOrientation = currentVideoOrientation()
+    }
     self.customCameraTexture?.update(sampleBuffer: sampleBuffer)
 
     // let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
