@@ -3,7 +3,7 @@
 This repository contains various Flutter barcode scanner projects implemented using different methods.
 
 ## Examples
-- [Flutter Camera](examples/flutter_camera) (Dart only for time saving)
+- [Flutter Camera](examples/flutter_camera) (Dart only)
     - Use the [camera](https://pub.dev/packages/camera) plugin to display camera preview and retrieve the camera frames. 
     - Use the [flutter_barcode_sdk](https://pub.dev/packages/flutter_barcode_sdk) plugin to decode barcodes from the camera frames.
     
