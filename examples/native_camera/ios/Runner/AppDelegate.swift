@@ -9,7 +9,6 @@ class CustomCameraTexture: NSObject, FlutterTexture {
   private var cameraPreviewLayer: AVCaptureVideoPreviewLayer?
   private let bufferQueue = DispatchQueue(label: "com.example.flutter/barcode_scan")
   private var _lastSampleBuffer: CMSampleBuffer?
-  private let barcodeReader = DynamsoftBarcodeReader()
   private var customCameraTexture: CustomCameraTexture?
 
   private var lastSampleBuffer: CMSampleBuffer? {
@@ -55,7 +54,7 @@ class CustomCameraTexture: NSObject, FlutterTexture {
 }
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+@objc class AppDelegate: FlutterAppDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, DBRLicenseVerificationListener {
 
   private var flutterTextureEntry: FlutterTextureRegistry?
   private var cameraSession: AVCaptureSession?
@@ -67,11 +66,25 @@ class CustomCameraTexture: NSObject, FlutterTexture {
   private var height = 1080
   private var textureId: Int64?
   private var lastSampleBuffer: CMSampleBuffer?
+  private var isProcessing = false
+  private var channel: FlutterMethodChannel?
+  private let reader = DynamsoftBarcodeReader()
     
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    DynamsoftBarcodeReader.initLicense("DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==", verificationDelegate: self)
+    
+    do {
+      let settings = try? reader.getRuntimeSettings()
+      settings!.expectedBarcodesCount = 999
+      try reader.updateRuntimeSettings(settings!)
+    } catch {
+      print("Error getting runtime settings")
+    }
+    
+
     GeneratedPluginRegistrant.register(with: self)
 
     guard let flutterViewController = window?.rootViewController as? FlutterViewController else {
@@ -79,9 +92,8 @@ class CustomCameraTexture: NSObject, FlutterTexture {
     }
     flutterTextureEntry = flutterViewController.engine!.textureRegistry
 
-    let channel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: flutterViewController.binaryMessenger)
-
-    channel.setMethodCallHandler({
+    channel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: flutterViewController.binaryMessenger)
+    channel?.setMethodCallHandler({
       (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
       if call.method == "startCamera" {
         self.startCamera(result: result)
@@ -98,6 +110,14 @@ class CustomCameraTexture: NSObject, FlutterTexture {
 
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  func dbrLicenseVerificationCallback(_ isSuccess: Bool, error: Error?) {
+    if isSuccess {
+      print("License verification passed")
+    } else {
+      print("License verification failed: \(error?.localizedDescription ?? "Unknown error")")
+    }
   }
 
   private func startCamera(result: @escaping FlutterResult) {
@@ -150,24 +170,66 @@ class CustomCameraTexture: NSObject, FlutterTexture {
     }
     self.customCameraTexture?.update(sampleBuffer: sampleBuffer)
 
-    // let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-    // let ciImage = CIImage(cvPixelBuffer: imageBuffer!)
-    // let context = CIContext()
-    // let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-    // let image = UIImage(cgImage: cgImage!)
-
-    // flutterTextureEntry?.texture?.update(image.cgImage)
-
-    // let barcodeReader = DynamsoftBarcodeReader()
-    // barcodeReader.license = "LICENSE-KEY"
-    // barcodeReader.barcodeFormat = EnumBarcodeFormat.ONED | EnumBarcodeFormat.PDF417 | EnumBarcodeFormat.QRCODE | EnumBarcodeFormat.DATAMATRIX
-    // barcodeReader.initLicenseFromServer("https://www.dynamsoft.com/CustomerPortal/Portal/Triallicense.aspx")
-
-    // let results = barcodeReader.decodeBuffer(image.toBuffer())
-    // if results != nil {
-    //   for result in results! {
-    //     print(result.barcodeText)
-    //   }
-    // }
+    if !isProcessing {
+      isProcessing = true
+      DispatchQueue.global(qos: .background).async {
+        self.processImage(sampleBuffer)
+        self.isProcessing = false
+      }
+    }
   }
+
+  func processImage(_ sampleBuffer: CMSampleBuffer) {
+    let imageBuffer:CVImageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+    CVPixelBufferLockBaseAddress(imageBuffer, .readOnly)
+    let baseAddress = CVPixelBufferGetBaseAddress(imageBuffer)
+    let bufferSize = CVPixelBufferGetDataSize(imageBuffer)
+    let width = CVPixelBufferGetWidth(imageBuffer)
+    let height = CVPixelBufferGetHeight(imageBuffer)
+    let bpr = CVPixelBufferGetBytesPerRow(imageBuffer)
+    CVPixelBufferUnlockBaseAddress(imageBuffer, .readOnly)
+    let buffer = Data(bytes: baseAddress!, count: bufferSize)
+    
+    let imageData = iImageData.init()
+    imageData.bytes = buffer
+    imageData.width = width
+    imageData.height = height
+    imageData.stride = bpr
+    imageData.format = .ARGB_8888
+    imageData.orientation = 0
+
+    let results = try? reader.decodeBuffer(imageData)
+    DispatchQueue.main.async {
+      self.channel?.invokeMethod("onBarcodeDetected", arguments: self.wrapResults(results: results))
+    }
+  }
+
+  func wrapResults(results:[iTextResult]?) -> NSArray {
+        let outResults = NSMutableArray(capacity: 8)
+        if results == nil {
+            return outResults
+        }
+        for item in results! {
+            let subDic = NSMutableDictionary(capacity: 11)
+            if item.barcodeFormat_2 != EnumBarcodeFormat2.Null {
+                subDic.setObject(item.barcodeFormatString_2 ?? "", forKey: "format" as NSCopying)
+            }else{
+                subDic.setObject(item.barcodeFormatString ?? "", forKey: "format" as NSCopying)
+            }
+            let points = item.localizationResult?.resultPoints as! [CGPoint]
+            subDic.setObject(Int(points[0].x), forKey: "x1" as NSCopying)
+            subDic.setObject(Int(points[0].y), forKey: "y1" as NSCopying)
+            subDic.setObject(Int(points[1].x), forKey: "x2" as NSCopying)
+            subDic.setObject(Int(points[1].y), forKey: "y2" as NSCopying)
+            subDic.setObject(Int(points[2].x), forKey: "x3" as NSCopying)
+            subDic.setObject(Int(points[2].y), forKey: "y3" as NSCopying)
+            subDic.setObject(Int(points[3].x), forKey: "x4" as NSCopying)
+            subDic.setObject(Int(points[3].y), forKey: "y4" as NSCopying)
+            subDic.setObject(item.localizationResult?.angle ?? 0, forKey: "angle" as NSCopying)
+            subDic.setObject(item.barcodeBytes ?? "", forKey: "barcodeBytes" as NSCopying)
+            outResults.add(subDic)
+        }
+
+        return outResults
+    }
 }
