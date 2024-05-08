@@ -20,5 +20,5 @@ jobs:
     - uses: bluefireteam/flutter-gh-pages@v7
       with:
           workingDir: examples/flutter_camera
-          baseHref: /flutter-barcode-scanner/
+          baseHref: /flutter-barcode-qr-code-scanner/
 
