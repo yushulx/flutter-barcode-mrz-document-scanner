@@ -12,20 +12,20 @@
                 "-d",
                 "chrome"
             ]
-        },        
+        },
         {
-            "name": "flutter-barcode-scanner",
+            "name": "flutter-barcode-qr-code-scanner",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "flutter-barcode-scanner (profile mode)",
+            "name": "flutter-barcode-qr-code-scanner (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter-barcode-scanner (release mode)",
+            "name": "flutter-barcode-qr-code-scanner (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

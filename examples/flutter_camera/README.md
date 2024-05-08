@@ -4,7 +4,7 @@ A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https:
 
 
 
-https://github.com/yushulx/flutter-barcode-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778
+https://github.com/yushulx/flutter-barcode-qr-code-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778
 
 
 
@@ -38,4 +38,4 @@ https://github.com/yushulx/flutter-barcode-scanner/assets/2202306/c49620d8-34e2-
     ```
     
 ## Try Online Demo
-[https://yushulx.me/flutter-barcode-scanner/](https://yushulx.me/flutter-barcode-scanner/)
+[https://yushulx.me/flutter-barcode-qr-code-scanner/](https://yushulx.me/flutter-barcode-qr-code-scanner/)

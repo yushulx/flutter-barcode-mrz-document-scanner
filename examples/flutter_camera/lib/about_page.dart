@@ -127,7 +127,7 @@ class AboutPage extends StatelessWidget {
               InkWell(
                   onTap: () {
                     launchUrlString(
-                        'https://github.com/yushulx/flutter-barcode-scanner');
+                        'https://github.com/yushulx/flutter-barcode-qr-code-scanner');
                   },
                   child: const Text(
                     'App Source Code >',
