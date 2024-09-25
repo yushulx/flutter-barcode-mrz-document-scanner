@@ -16,7 +16,7 @@ https://github.com/yushulx/flutter-barcode-qr-code-scanner/assets/2202306/c49620
 - **Linux** (Without camera support)
 
 ## Getting Started
-1. Apply for a [30-day trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr) and replace the license key in the `global.dart` file with your own:
+1. Apply for a [30-day trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) and replace the license key in the `global.dart` file with your own:
 
     ```dart
     Future<int> initBarcodeSDK() async {
