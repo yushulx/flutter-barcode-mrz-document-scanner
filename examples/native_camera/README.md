@@ -2,7 +2,7 @@
 The Flutter project demonstrates how to implement a camera preview using native code and Dart.
 
 ## Prerequisites
-- [Dynamsoft Barcode Reader Trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dbr) 
+- [Dynamsoft Barcode Reader Trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) 
     
     **Android**    
 
