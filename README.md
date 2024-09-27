@@ -22,7 +22,7 @@ This repository contains some Flutter examples demonstrating how to build barcod
 
 - [Pharma Lookup](examples/pharma_lookup/)
     
-    ![pharma-look-up](https://www.dynamsoft.com/codepool/img/2023/11/pharma-look-up.png)
+    https://github.com/user-attachments/assets/45a450fe-3c18-479e-8de5-a2ec77bbe2f1
 
 ## Try Online Demo
 [https://yushulx.me/flutter-barcode-qr-code-scanner/](https://yushulx.me/flutter-barcode-qr-code-scanner/)
