@@ -124,6 +124,10 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
               'Barcode Scanner',
               style: TextStyle(color: Colors.white),
             ),
+            iconTheme: const IconThemeData(
+              color: Colors
+                  .white, // Set the color of the back arrow and other icons
+            ),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 20),

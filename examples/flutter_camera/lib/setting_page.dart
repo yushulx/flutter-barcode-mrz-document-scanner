@@ -19,6 +19,10 @@ class _SettingPageState extends State<SettingPage> {
         appBar: AppBar(
           backgroundColor: colorMainTheme,
           title: const Text('Settings'),
+          iconTheme: const IconThemeData(
+            color:
+                Colors.white, // Set the color of the back arrow and other icons
+          ),
         ),
         body: const ExpansionPanelListFormats(),
       ),
