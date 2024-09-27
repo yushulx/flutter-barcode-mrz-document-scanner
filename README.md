@@ -1,6 +1,6 @@
-# Flutter Barcode and QR Scanner Examples
+# Flutter Examples for Barcode, MRZ and Document Scanning
 
-This repository contains some Flutter examples demonstrating how to build barcode and QR code scanner apps with Dynamsoft Barcode Reader SDK.
+This repository contains examples for building barcode, MRZ and document scanning apps with Flutter and Dynamsoft Vision SDKs.
 
 ## Examples
 - [Flutter Camera](examples/flutter_camera) (**Dart**)
