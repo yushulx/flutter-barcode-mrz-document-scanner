@@ -1,6 +1,6 @@
 # Flutter Barcode and QR Scanner Examples
 
-This repository contains various Flutter barcode scanner projects implemented using different methods.
+This repository contains some Flutter examples demonstrating how to build barcode and QR code scanner apps with Dynamsoft Barcode Reader SDK.
 
 ## Examples
 - [Flutter Camera](examples/flutter_camera) (**Dart**)
@@ -19,6 +19,10 @@ This repository contains various Flutter barcode scanner projects implemented us
     - Use the [dynamsoft_capture_vision_flutter](https://pub.dev/packages/dynamsoft_capture_vision_flutter) plugin to display camera preview and decode barcodes.
         
     https://github.com/yushulx/multiple-barcode-qrcode-datamatrix-scan/assets/2202306/ed7eaec3-048b-4243-9910-3409e2d4672d
+
+- [Pharma Lookup](examples/pharma_lookup/)
     
+    ![pharma-look-up](https://www.dynamsoft.com/codepool/img/2023/11/pharma-look-up.png)
+
 ## Try Online Demo
 [https://yushulx.me/flutter-barcode-qr-code-scanner/](https://yushulx.me/flutter-barcode-qr-code-scanner/)
