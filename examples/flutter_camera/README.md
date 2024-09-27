@@ -39,3 +39,6 @@ https://github.com/yushulx/flutter-barcode-qr-code-scanner/assets/2202306/c49620
     
 ## Try Online Demo
 [https://yushulx.me/flutter-barcode-qr-code-scanner/](https://yushulx.me/flutter-barcode-qr-code-scanner/)
+
+## Blog
+[How to Build a Barcode Scanner App with Flutter Step by Step](https://www.dynamsoft.com/codepool/flutter-barcode-scanner-app-guide.html)
