@@ -2,7 +2,7 @@
 
 **Pharma Lookup** is a Flutter application that enables users to scan 1D and 2D barcodes to retrieve detailed pharmaceutical information. Leveraging the power of barcode scanning and a comprehensive dataset, this app provides a seamless experience for verifying medication details.
 
-https://github.com/yushulx/pharma-lookup/assets/2202306/21a5c49d-840e-418b-b293-cb206cbbd894
+https://github.com/user-attachments/assets/45a450fe-3c18-479e-8de5-a2ec77bbe2f1
 
 ## Supported Platforms
 Pharma Lookup is built to run smoothly across multiple platforms:
@@ -61,3 +61,5 @@ List<dynamic> list = [
     ![pharma-look-up](https://www.dynamsoft.com/codepool/img/2023/11/pharma-look-up.png)
 
 
+## Blog
+[Building an AR-Enhanced Pharma Lookup App with Flutter, Dynamsoft Barcode SDK and Database](https://www.dynamsoft.com/codepool/augmented-reality-pharma-barcode-lookup.html)
