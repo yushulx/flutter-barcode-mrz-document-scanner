@@ -23,9 +23,6 @@ dependencies:
   share_plus: ^7.0.2
   url_launcher: ^6.1.11
   flutter_exif_rotation: ^0.5.1
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
   flutter_lints: ^4.0.0
 
