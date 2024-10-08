@@ -72,7 +72,7 @@ class _ExpansionPanelListFormatsState extends State<ExpansionPanelListFormats> {
                         height: 24,
                         color: colorOrange,
                         child: Checkbox(
-                          fillColor: MaterialStateColor.resolveWith(
+                          fillColor: WidgetStateColor.resolveWith(
                               (states) => colorOrange),
                           checkColor: Colors.black,
                           activeColor: Colors.white,
@@ -123,7 +123,7 @@ class _ExpansionPanelListFormatsState extends State<ExpansionPanelListFormats> {
                             height: 24,
                             color: Colors.white,
                             child: Checkbox(
-                              fillColor: MaterialStateColor.resolveWith(
+                              fillColor: WidgetStateColor.resolveWith(
                                   (states) => Colors.white),
                               checkColor: item.selectedOptions.contains(value)
                                   ? Colors.black
