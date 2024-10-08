@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2  
-  flutter_barcode_sdk: ^2.2.4
+  cupertino_icons: ^1.0.8
+  flutter_barcode_sdk: ^2.2.7
   image_picker: ^1.0.0
   shared_preferences: ^2.1.1
   camera: ^0.11.0+2

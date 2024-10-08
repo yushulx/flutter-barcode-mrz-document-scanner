@@ -163,10 +163,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_barcode_sdk
-      sha256: fd7c4568c87fafc29c93e78a5d03277264b6712fc8d17d1087f59bc4b0ad627d
+      sha256: "59c90443f08a758abd915dd221ab1ada1bbd7cabe5de280b7e92c8c31bcecad6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.6"
+    version: "2.2.7"
   flutter_exif_rotation:
     dependency: "direct main"
     description:
