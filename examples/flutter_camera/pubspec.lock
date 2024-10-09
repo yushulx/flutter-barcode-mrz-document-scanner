@@ -12,10 +12,9 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      name: camera
-      sha256: "26ff41045772153f222ffffecba711a206f670f5834d40ebf5eed3811692f167"
-      url: "https://pub.dev"
-    source: hosted
+      path: camera
+      relative: true
+    source: path
     version: "0.11.0+2"
   camera_android_camerax:
     dependency: transitive
@@ -44,19 +43,16 @@ packages:
   camera_web:
     dependency: transitive
     description:
-      name: camera_web
-      sha256: "595f28c89d1fb62d77c73c633193755b781c6d2e0ebcd8dc25b763b514e6ba8f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.5"
+      path: web_camera
+      relative: true
+    source: path
+    version: "0.3.3"
   camera_windows:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "5cb2e2acc2932a8d85b318b593661046152a424f"
-      url: "https://github.com/yushulx/flutter_camera_windows.git"
-    source: git
+      path: windows_camera
+      relative: true
+    source: path
     version: "0.2.1+5"
   characters:
     dependency: transitive
