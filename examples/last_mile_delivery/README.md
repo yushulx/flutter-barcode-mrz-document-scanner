@@ -2,7 +2,7 @@
 
 A Flutter project demonstrating how to implement a prototype for a last-mile delivery app using [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/), [Dyanmsoft Label Recognizer](https://www.dynamsoft.com/label-recognition/overview/) and [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/introduction/?ver=latest).
 
-https://github.com/yushulx/flutter-last-mile-delivery/assets/2202306/78af0028-7620-4c30-a91e-bc67c9c22c5a
+https://github.com/user-attachments/assets/98c9dfb0-f165-46c2-9f92-d549236f354c
 
 ## Supported Platforms
 - Windows
