@@ -25,8 +25,16 @@ This repository contains examples for building **barcode**, **MRZ** and **docume
     https://github.com/user-attachments/assets/45a450fe-3c18-479e-8de5-a2ec77bbe2f1
 
 - [Last Mile Delivery](examples/last_mile_delivery/)
+    
+    https://github.com/user-attachments/assets/98c9dfb0-f165-46c2-9f92-d549236f354c
+
 - [Document Scanner](examples/document_scanner/)
+    
+    https://github.com/user-attachments/assets/c6584bbe-0801-4379-a44f-ba982f432f34
+
 - [Wireless Keyboard](examples/wireless_keyboard/)
+    
+    https://github.com/user-attachments/assets/a0600ec0-3244-414f-8aa3-b11e048f8f31
 
 ## Try Barcode Reader Online Demo
 [https://yushulx.me/flutter-barcode-mrz-document-scanner/](https://yushulx.me/flutter-barcode-mrz-document-scanner/)
