@@ -18,7 +18,7 @@ This repository contains examples for building **barcode**, **MRZ** and **docume
 - [Dynamsoft Camera](examples/dynamsoft_camera) (**Dart**)
     - Use the [dynamsoft_capture_vision_flutter](https://pub.dev/packages/dynamsoft_capture_vision_flutter) plugin to display camera preview and decode barcodes.
         
-    https://github.com/yushulx/multiple-barcode-qrcode-datamatrix-scan/assets/2202306/ed7eaec3-048b-4243-9910-3409e2d4672d
+    https://github.com/user-attachments/assets/a67e6607-245e-4aea-9cdc-db742de84b4b
 
 - [Pharma Lookup](examples/pharma_lookup/)
     
