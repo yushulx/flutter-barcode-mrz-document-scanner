@@ -2,6 +2,8 @@
 
 A Flutter barcode scanner project for scanning multiple barcode, QR code and DataMatrix.
 
+https://github.com/user-attachments/assets/a67e6607-245e-4aea-9cdc-db742de84b4b
+
 ## Supported Platforms
 - Android
 - iOS
@@ -18,9 +20,6 @@ A Flutter barcode scanner project for scanning multiple barcode, QR code and Dat
     ```bash
     flutter run
     ```
-
-    https://github.com/yushulx/multiple-barcode-qrcode-datamatrix-scan/assets/2202306/ed7eaec3-048b-4243-9910-3409e2d4672d
-
 
 
 ## Blog
