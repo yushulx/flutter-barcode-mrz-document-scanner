@@ -2,7 +2,7 @@
 
 A Flutter project that demonstrates how to use [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/introduction/?ver=latest) to scan and rectify documents on Windows, Android, iOS and web.
 
-https://github.com/yushulx/flutter_document_scan_sdk/assets/2202306/6ef5e1e0-b3c3-4767-a495-f76ceaa66f91
+https://github.com/user-attachments/assets/c6584bbe-0801-4379-a44f-ba982f432f34
 
 ## Supported Platforms
 - Flutter Web
