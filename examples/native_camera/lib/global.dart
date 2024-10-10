@@ -1,4 +1,4 @@
-// https://github.com/yushulx/flutter-barcode-qr-code-scanner/blob/main/lib/global.dart
+// https://github.com/yushulx/flutter-barcode-mrz-document-scanner/blob/main/lib/global.dart
 
 import 'package:flutter/material.dart';
 

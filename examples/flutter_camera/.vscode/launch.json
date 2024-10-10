@@ -14,18 +14,18 @@
             ]
         },
         {
-            "name": "flutter-barcode-qr-code-scanner",
+            "name": "flutter-barcode-mrz-document-scanner",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "flutter-barcode-qr-code-scanner (profile mode)",
+            "name": "flutter-barcode-mrz-document-scanner (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter-barcode-qr-code-scanner (release mode)",
+            "name": "flutter-barcode-mrz-document-scanner (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
