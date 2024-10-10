@@ -2,6 +2,9 @@
 
 The project demonstrates how to turn a Flutter mobile app into a wireless keyboard and barcode scanner to input data into PCs.
 
+https://github.com/user-attachments/assets/a0600ec0-3244-414f-8aa3-b11e048f8f31
+
+
 ## Setting Up the Python Server
 1. Install [pyautogui](https://pypi.org/project/PyAutoGUI/), [websockets](https://pypi.org/project/websockets/) and [zeroconf](https://pypi.org/project/zeroconf/) using pip:
     ```bash
@@ -40,4 +43,6 @@ The project demonstrates how to turn a Flutter mobile app into a wireless keyboa
     flutter run
     ```
     
-    https://user-images.githubusercontent.com/2202306/220560577-95e8b1a3-de36-48e1-926c-3a34a506fb82.mp4
+    
+
+
