@@ -1,6 +1,6 @@
 # Flutter Barcode Scanner
 
-A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to scan 1D and 2D barcodes on Android, iOS, Windows, Linux, and web.
+A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to scan 1D and 2D barcodes on Android, iOS, Windows, Linux, macOS and web.
 
 
 
@@ -13,7 +13,8 @@ https://github.com/yushulx/flutter-barcode-mrz-document-scanner/assets/2202306/c
 - **Android**
 - **iOS**
 - **Windows**
-- **Linux** (Without camera support)
+- **Linux** 
+- **macOS**
 
 ## Getting Started
 1. Apply for a [30-day trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform) and replace the license key in the `global.dart` file with your own:
@@ -23,7 +24,6 @@ https://github.com/yushulx/flutter-barcode-mrz-document-scanner/assets/2202306/c
         int ret = await barcodeReader.setLicense(
             'LICENSE-KEY');
         await barcodeReader.init();
-        await barcodeReader.setBarcodeFormats(BarcodeFormat.ALL);
         return ret;
     }
     ```
@@ -35,6 +35,7 @@ https://github.com/yushulx/flutter-barcode-mrz-document-scanner/assets/2202306/c
     # flutter run -d windows
     # flutter run -d edge
     # flutter run -d linux
+    # flutter run -d macos
     ```
     
 ## Try Online Demo

@@ -11,17 +11,14 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  flutter_barcode_sdk: ^2.2.7
+  flutter_barcode_sdk: ^3.0.1
   image_picker: ^1.0.0
   shared_preferences: ^2.1.1
-  camera: 
-    path: ./camera/
-  camera_windows: 
-    path: ./windows_camera/
+  camera: ^0.10.6
   share_plus: ^10.0.2
   url_launcher: ^6.1.11
   flutter_exif_rotation: ^0.5.1
-
+  flutter_lite_camera: ^0.0.1
   flutter_lints: ^5.0.0
 
 
@@ -43,4 +40,5 @@ flutter:
     - images/icon-capture.png
     - images/image-barcode.png
     - images/logo-dbr.png
+    - images/default.png
     

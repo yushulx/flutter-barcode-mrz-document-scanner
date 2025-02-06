@@ -53,9 +53,6 @@ class _HomePageState extends State<HomePage> {
     ByteData? byteData =
         await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     if (byteData != null) {
-      if (kIsWeb) {
-        // barcodeReader.setParameters(readerTemplate);
-      }
       List<BarcodeResult>? results = await barcodeReader.decodeImageBuffer(
           byteData.buffer.asUint8List(),
           image.width,
@@ -99,12 +96,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             GestureDetector(
                 onTap: () {
-                  if (!kIsWeb && Platform.isLinux) {
-                    showAlert(context, "Warning",
-                        "${Platform.operatingSystem} is not supported");
-                    return;
-                  }
-
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const CameraPage();
                   }));

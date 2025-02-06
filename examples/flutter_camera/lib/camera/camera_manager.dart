@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:camera_windows/camera_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
@@ -8,10 +7,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_barcode_sdk/dynamsoft_barcode.dart';
 import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
-
+import 'package:flutter_lite_camera/flutter_lite_camera.dart';
+import 'dart:ui' as ui;
 import '../global.dart';
-
-import 'package:camera_platform_interface/camera_platform_interface.dart';
+import 'frame_painter.dart';
 
 class CameraManager {
   BuildContext context;
@@ -22,7 +21,6 @@ class CameraManager {
   List<BarcodeResult>? barcodeResults;
   bool isDriverLicense = true;
   bool isFinished = false;
-  StreamSubscription<FrameAvailabledEvent>? _frameAvailableStreamSubscription;
   int cameraIndex = 0;
   bool isReadyToGo = false;
   bool _isWebFrameStarted = false;
@@ -39,6 +37,15 @@ class CameraManager {
   Function cbIsMounted;
   Function cbNavigation;
 
+  ui.Image? _latestFrame;
+  bool _isCameraOpened = false;
+  final _width = 640;
+  final _height = 480;
+  bool _shouldCapture = false;
+  bool isDecoding = false;
+  final FlutterLiteCamera _flutterLiteCameraPlugin = FlutterLiteCamera();
+  List<String> _devices = [];
+
   void initState() {
     initCamera();
   }
@@ -51,6 +58,12 @@ class CameraManager {
       await waitForStop();
       controller?.dispose();
       controller = null;
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await _stopCamera();
+    } else {
+      // await controller!.stopImageStream();
+      // controller!.dispose();
+      // controller = null;
     }
 
     cameraIndex = cameraIndex == 0 ? 1 : 0;
@@ -79,6 +92,8 @@ class CameraManager {
     isFinished = true;
     if (kIsWeb) {
       await waitForStop();
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await _stopCamera();
     }
     if (controller == null) return;
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
@@ -87,9 +102,6 @@ class CameraManager {
 
     controller!.dispose();
     controller = null;
-
-    _frameAvailableStreamSubscription?.cancel();
-    _frameAvailableStreamSubscription = null;
   }
 
   Future<void> webCamera() async {
@@ -102,14 +114,14 @@ class CameraManager {
         var results = await barcodeReader.decodeFile(file.path);
         // var end = DateTime.now().millisecondsSinceEpoch;
         // print('decodeFile time: ${end - start}');
-        if (!cbIsMounted()) break;
-
         barcodeResults = results;
       }
 
-      cbRefreshUi();
-      if (isReadyToGo && barcodeResults != null) {
-        handleBarcode(barcodeResults!);
+      if (cbIsMounted()) {
+        cbRefreshUi();
+        if (isReadyToGo && barcodeResults != null) {
+          handleBarcode(barcodeResults!);
+        }
       }
     }
     _isWebFrameStarted = false;
@@ -180,7 +192,7 @@ class CameraManager {
   }
 
   Future<void> startVideo() async {
-    barcodeResults = null;
+    barcodeResults = [];
 
     isFinished = false;
 
@@ -190,77 +202,188 @@ class CameraManager {
       webCamera();
     } else if (Platform.isAndroid || Platform.isIOS) {
       mobileCamera();
-    } else if (Platform.isWindows) {
-      _frameAvailableStreamSubscription?.cancel();
-      _frameAvailableStreamSubscription =
-          (CameraPlatform.instance as CameraWindows)
-              .onFrameAvailable(controller!.cameraId)
-              .listen(_onFrameAvailable);
-    }
-  }
-
-  void _onFrameAvailable(FrameAvailabledEvent event) {
-    if (cbIsMounted() == false || isFinished) return;
-
-    Map<String, dynamic> map = event.toJson();
-    final Uint8List? data = map['bytes'] as Uint8List?;
-    if (data != null) {
-      if (!_isScanAvailable) {
-        return;
-      }
-
-      _isScanAvailable = false;
-      int width = previewSize!.width.toInt();
-      int height = previewSize!.height.toInt();
-
-      processId(
-          data, width, height, width * 4, ImagePixelFormat.IPF_ARGB_8888.index);
     }
   }
 
   Future<void> initCamera() async {
-    try {
-      WidgetsFlutterBinding.ensureInitialized();
+    if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+      try {
+        WidgetsFlutterBinding.ensureInitialized();
 
-      List<CameraDescription> allCameras = await availableCameras();
+        List<CameraDescription> allCameras = await availableCameras();
 
-      if (kIsWeb) {
-        for (final CameraDescription cameraDescription in allCameras) {
-          print(cameraDescription.name);
-          if (cameraDescription.name.toLowerCase().contains('front')) {
-            if (isFrontFound) continue;
-            isFrontFound = true;
-            _cameras.add(cameraDescription);
-          } else if (cameraDescription.name.toLowerCase().contains('back')) {
-            if (isBackFound) continue;
-            isBackFound = true;
-            _cameras.add(cameraDescription);
-          } else {
-            _cameras.add(cameraDescription);
+        if (kIsWeb) {
+          for (final CameraDescription cameraDescription in allCameras) {
+            print(cameraDescription.name);
+            if (cameraDescription.name.toLowerCase().contains('front')) {
+              if (isFrontFound) continue;
+              isFrontFound = true;
+              _cameras.add(cameraDescription);
+            } else if (cameraDescription.name.toLowerCase().contains('back')) {
+              if (isBackFound) continue;
+              isBackFound = true;
+              _cameras.add(cameraDescription);
+            } else {
+              _cameras.add(cameraDescription);
+            }
           }
+        } else {
+          _cameras = allCameras;
         }
-      } else {
-        _cameras = allCameras;
-      }
 
-      if (_cameras.isEmpty) return;
+        if (_cameras.isEmpty) return;
 
-      if (!kIsWeb) {
-        toggleCamera(cameraIndex);
-      } else {
-        if (_cameras.length > 1) {
-          cameraIndex = 1;
+        if (!kIsWeb) {
           toggleCamera(cameraIndex);
         } else {
-          toggleCamera(cameraIndex);
+          if (_cameras.length > 1) {
+            cameraIndex = 1;
+            toggleCamera(cameraIndex);
+          } else {
+            toggleCamera(cameraIndex);
+          }
         }
+      } on CameraException catch (e) {
+        print(e);
       }
-    } on CameraException catch (e) {
-      print(e);
+    } else {
+      _devices = await _flutterLiteCameraPlugin.getDeviceList();
+      if (_devices.isNotEmpty) {
+        toggleCamera(0);
+      }
     }
   }
 
+  ///////////////////////////////////////////////////////
+  /// Flutter Lite Camera Plugin
+
+  Future<void> _startCamera(int index) async {
+    try {
+      if (_devices.isNotEmpty && index < _devices.length) {
+        bool opened = await _flutterLiteCameraPlugin.open(index);
+        if (opened) {
+          _isCameraOpened = true;
+          _shouldCapture = true;
+          _captureFrames();
+        } else {
+          print("Failed to open the camera.");
+        }
+      }
+    } catch (e) {
+      // print("Error initializing camera: $e");
+    }
+  }
+
+  Future<void> _stopCamera() async {
+    _shouldCapture = false;
+
+    if (_isCameraOpened) {
+      await _flutterLiteCameraPlugin.release();
+      _isCameraOpened = false;
+      _latestFrame = null;
+      isDecoding = false;
+      barcodeResults = [];
+    }
+  }
+
+  Future<void> _decodeFrame(Uint8List rgb, int width, int height) async {
+    if (isDecoding) return;
+
+    isDecoding = true;
+    barcodeResults = await barcodeReader.decodeImageBuffer(
+      rgb,
+      width,
+      height,
+      width * 3,
+      ImagePixelFormat.IPF_RGB_888.index,
+    );
+
+    if (cbIsMounted()) {
+      cbRefreshUi();
+      if (isReadyToGo && barcodeResults != null) {
+        handleBarcode(barcodeResults!);
+      }
+    }
+
+    isDecoding = false;
+  }
+
+  Future<void> _captureFrames() async {
+    if (!_isCameraOpened || !_shouldCapture || !cbIsMounted()) return;
+
+    try {
+      Map<String, dynamic> frame =
+          await _flutterLiteCameraPlugin.captureFrame();
+      if (frame.containsKey('data')) {
+        Uint8List rgbBuffer = frame['data'];
+        _decodeFrame(rgbBuffer, frame['width'], frame['height']);
+        await _convertBufferToImage(rgbBuffer, frame['width'], frame['height']);
+      }
+    } catch (e) {
+      // print("Error capturing frame: $e");
+    }
+
+    // Schedule the next frame
+    if (_shouldCapture) {
+      Future.delayed(const Duration(milliseconds: 30), _captureFrames);
+    }
+  }
+
+  Future<void> _convertBufferToImage(
+      Uint8List rgbBuffer, int width, int height) async {
+    final pixels = Uint8List(width * height * 4); // RGBA buffer
+
+    for (int i = 0; i < width * height; i++) {
+      int r = rgbBuffer[i * 3];
+      int g = rgbBuffer[i * 3 + 1];
+      int b = rgbBuffer[i * 3 + 2];
+
+      // Populate RGBA buffer
+      pixels[i * 4] = b;
+      pixels[i * 4 + 1] = g;
+      pixels[i * 4 + 2] = r;
+      pixels[i * 4 + 3] = 255; // Alpha channel
+    }
+
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      pixels,
+      width,
+      height,
+      ui.PixelFormat.rgba8888,
+      completer.complete,
+    );
+
+    final image = await completer.future;
+    _latestFrame = image;
+
+    cbRefreshUi();
+  }
+
+  Widget _buildCameraStream() {
+    if (_latestFrame == null) {
+      return Image.asset(
+        'images/default.png',
+      );
+    } else {
+      return CustomPaint(
+        painter: FramePainter(_latestFrame!),
+        child: SizedBox(
+          width: _width.toDouble(),
+          height: _height.toDouble(),
+        ),
+      );
+    }
+  }
+
+  ///////////////////////////////////////////////////////
+
   Widget getPreview() {
+    if (!kIsWeb &&
+        (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+      return _buildCameraStream();
+    }
+
     if (controller == null || !controller!.value.isInitialized || isFinished) {
       return Container(
         child: const Text('No camera available!'),
@@ -294,62 +417,47 @@ class CameraManager {
   }
 
   Future<void> toggleCamera(int index) async {
-    // if (controller != null) controller!.dispose();
-    ResolutionPreset preset = ResolutionPreset.high;
-    // if (kIsWeb) {
-    //   preset = ResolutionPreset.medium;
-    // }
-    controller = CameraController(
-        _cameras[index], kIsWeb ? ResolutionPreset.max : preset,
-        enableAudio: false);
-    // controller!.initialize().then((_) {
-    //   if (!cbIsMounted()) {
-    //     return;
-    //   }
+    if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+      ResolutionPreset preset = ResolutionPreset.high;
+      controller = CameraController(
+          _cameras[index], kIsWeb ? ResolutionPreset.max : preset,
+          enableAudio: false);
 
-    //   previewSize = controller!.value.previewSize;
+      try {
+        await controller!.initialize();
+        if (cbIsMounted()) {
+          previewSize = controller!.value.previewSize;
 
-    //   startVideo();
-    // }).catchError((Object e) {
-    //   if (e is CameraException) {
-    //     switch (e.code) {
-    //       case 'CameraAccessDenied':
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   }
-    // });
-
-    try {
-      await controller!.initialize();
-      if (cbIsMounted()) {
-        previewSize = controller!.value.previewSize;
-
-        startVideo();
+          startVideo();
+        }
+      } on CameraException catch (e) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            showInSnackBar('You have denied camera access.');
+          case 'CameraAccessDeniedWithoutPrompt':
+            // iOS only
+            showInSnackBar(
+                'Please go to Settings app to enable camera access.');
+          case 'CameraAccessRestricted':
+            // iOS only
+            showInSnackBar('Camera access is restricted.');
+          case 'AudioAccessDenied':
+            showInSnackBar('You have denied audio access.');
+          case 'AudioAccessDeniedWithoutPrompt':
+            // iOS only
+            showInSnackBar('Please go to Settings app to enable audio access.');
+          case 'AudioAccessRestricted':
+            // iOS only
+            showInSnackBar('Audio access is restricted.');
+          default:
+            _showCameraException(e);
+            break;
+        }
       }
-    } on CameraException catch (e) {
-      switch (e.code) {
-        case 'CameraAccessDenied':
-          showInSnackBar('You have denied camera access.');
-        case 'CameraAccessDeniedWithoutPrompt':
-          // iOS only
-          showInSnackBar('Please go to Settings app to enable camera access.');
-        case 'CameraAccessRestricted':
-          // iOS only
-          showInSnackBar('Camera access is restricted.');
-        case 'AudioAccessDenied':
-          showInSnackBar('You have denied audio access.');
-        case 'AudioAccessDeniedWithoutPrompt':
-          // iOS only
-          showInSnackBar('Please go to Settings app to enable audio access.');
-        case 'AudioAccessRestricted':
-          // iOS only
-          showInSnackBar('Audio access is restricted.');
-        default:
-          _showCameraException(e);
-          break;
-      }
+    } else {
+      barcodeResults = [];
+      isFinished = false;
+      _startCamera(index);
     }
   }
 }
