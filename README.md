@@ -4,7 +4,7 @@ This repository contains examples for building **barcode**, **MRZ** and **docume
 
 ## Examples
 - [Flutter Camera](examples/flutter_camera) (**Dart**)
-    - Use the [camera](https://pub.dev/packages/camera) plugin to display camera preview and retrieve the camera frames. 
+    - Use the [camera](https://pub.dev/packages/camera) plugin (web/iOS/Android) and [flutter_lite_camera](https://pub.dev/packages/flutter_lite_camera) (Windows/Linux/macOS) to display camera preview and retrieve the camera frames. 
     - Use the [flutter_barcode_sdk](https://pub.dev/packages/flutter_barcode_sdk) plugin to decode barcodes from the camera frames.
     
     https://github.com/yushulx/flutter-barcode-mrz-document-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778    
