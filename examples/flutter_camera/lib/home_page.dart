@@ -53,9 +53,6 @@ class _HomePageState extends State<HomePage> {
     ByteData? byteData =
         await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     if (byteData != null) {
-      if (kIsWeb) {
-        // barcodeReader.setParameters(readerTemplate);
-      }
       List<BarcodeResult>? results = await barcodeReader.decodeImageBuffer(
           byteData.buffer.asUint8List(),
           image.width,

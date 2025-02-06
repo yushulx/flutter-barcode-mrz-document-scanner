@@ -4,7 +4,6 @@ import 'package:flutter_barcode_sdk/flutter_barcode_sdk.dart';
 
 FlutterBarcodeSdk barcodeReader = FlutterBarcodeSdk();
 bool isLicenseValid = false;
-String readerTemplate = '';
 String scannerTemplate = '''
 {
     "FormatSpecification": {
@@ -366,7 +365,7 @@ final List<Item> allFormats = <Item>[
 ];
 
 Future<void> updateFormats() async {
-  int formats = BarcodeFormat.NULL;
+  int formats = 0;
   for (Item item in allFormats) {
     var options = item.selectedOptions;
     for (String option in options) {
@@ -381,8 +380,6 @@ Future<int> initBarcodeSDK() async {
       'DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==');
   if (ret == 0) isLicenseValid = true;
   await barcodeReader.init();
-  await barcodeReader.setBarcodeFormats(BarcodeFormat.ALL);
-  readerTemplate = await barcodeReader.getParameters();
   return ret;
 }
 
