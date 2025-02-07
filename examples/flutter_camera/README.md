@@ -2,11 +2,8 @@
 
 A Flutter project that demonstrates how to use [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to scan 1D and 2D barcodes on Android, iOS, Windows, Linux, macOS and web.
 
-
-
-https://github.com/yushulx/flutter-barcode-mrz-document-scanner/assets/2202306/c49620d8-34e2-42f0-bd68-f674c5ef9778
-
-
+## Cross-platform Barcode Scanner for Web, Windows, macOS, Linux, iOS, and Android
+https://github.com/user-attachments/assets/e9447f4a-c042-419f-a6f2-e193a85b9218
 
 ## Supported Platforms
 - **Web**
