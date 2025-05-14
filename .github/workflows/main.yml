@@ -21,5 +21,5 @@ jobs:
       with:
           workingDir: examples/flutter_camera
           baseHref: /flutter-barcode-mrz-document-scanner/
-          buildArgs: --release --base-href /flutter-barcode-mrz-document-scanner/
+          customArgs: --release --base-href /flutter-barcode-mrz-document-scanner/
 
