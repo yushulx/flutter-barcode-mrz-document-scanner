@@ -1,4 +1,4 @@
-package com.example.mrzscanner
+package com.example.MrzBarcodeScanner
 
 import io.flutter.embedding.android.FlutterActivity
 

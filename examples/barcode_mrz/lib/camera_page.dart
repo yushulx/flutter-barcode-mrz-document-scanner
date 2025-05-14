@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ocr_sdk/ocr_line.dart';
-import 'package:mrzscanner/barcode_result_page.dart';
+import 'package:MrzBarcodeScanner/barcode_result_page.dart';
 
 import 'camera/camera_manager.dart';
 import 'global.dart';
@@ -26,10 +26,11 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     _cameraManager = CameraManager(
-        context: context,
-        cbRefreshUi: refreshUI,
-        cbIsMounted: isMounted,
-        cbNavigation: navigation);
+      context: context,
+      cbRefreshUi: refreshUI,
+      cbIsMounted: isMounted,
+      cbNavigation: navigation,
+    );
     _cameraManager.initState();
   }
 
@@ -38,16 +39,18 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       List<OcrLine> area = result;
 
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MrzResultPage(information: area[0]),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => MrzResultPage(information: area[0]),
+        ),
+      );
     } else {
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BarcodeResultPage(barcodeResults: result),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => BarcodeResultPage(barcodeResults: result),
+        ),
+      );
     }
   }
 
@@ -88,9 +91,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         right: 0.0,
         bottom: 0,
         left: 0.0,
-        child: createOverlay(
-          _cameraManager.ocrLines,
-        ),
+        child: createOverlay(_cameraManager.ocrLines),
       );
     } else {
       widget = Positioned(
@@ -98,9 +99,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         right: 0.0,
         bottom: 0,
         left: 0.0,
-        child: createOverlay(
-          _cameraManager.barcodeResults,
-        ),
+        child: createOverlay(_cameraManager.barcodeResults),
       );
     }
 
@@ -108,7 +107,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       return [
         SizedBox(width: 640, height: 480, child: _cameraManager.getPreview()),
-        widget
+        widget,
       ];
     } else {
       if (_cameraManager.controller != null &&
@@ -125,8 +124,11 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
         return [
           SizedBox(
-              width: width, height: height, child: _cameraManager.getPreview()),
-          widget
+            width: width,
+            height: height,
+            child: _cameraManager.getPreview(),
+          ),
+          widget,
         ];
       } else {
         return [const CircularProgressIndicator()];
@@ -144,51 +146,45 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     );
 
     return PopScope(
-        canPop: true,
-        child: Scaffold(
-          appBar: AppBar(
+      canPop: true,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: const Text(
+            'MRZ/Barcode Scanner',
+            style: TextStyle(color: Colors.white),
+          ),
+          iconTheme: const IconThemeData(
+            color:
+                Colors.white, // Set the color of the back arrow and other icons
+          ),
+        ),
+        body: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: Stack(children: createCameraPreview()),
+              ),
+            ),
+            Positioned(bottom: 80, left: 155, right: 155, child: captureButton),
+          ],
+        ),
+        floatingActionButton: Opacity(
+          opacity: 0.5,
+          child: FloatingActionButton(
             backgroundColor: Colors.black,
-            title: const Text(
-              'MRZ/VIN Scanner',
-              style: TextStyle(color: Colors.white),
-            ),
-            iconTheme: const IconThemeData(
-              color: Colors
-                  .white, // Set the color of the back arrow and other icons
-            ),
+            child: const Icon(Icons.flip_camera_android),
+            onPressed: () {
+              _cameraManager.switchCamera();
+            },
           ),
-          body: Stack(
-            children: <Widget>[
-              Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Stack(
-                    children: createCameraPreview(),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 80,
-                left: 155,
-                right: 155,
-                child: captureButton,
-              ),
-            ],
-          ),
-          floatingActionButton: Opacity(
-            opacity: 0.5,
-            child: FloatingActionButton(
-              backgroundColor: Colors.black,
-              child: const Icon(Icons.flip_camera_android),
-              onPressed: () {
-                _cameraManager.switchCamera();
-              },
-            ),
-          ),
-        ));
+        ),
+      ),
+    );
   }
 }
