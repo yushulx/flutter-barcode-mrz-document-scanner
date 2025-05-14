@@ -13,6 +13,7 @@ jobs:
       uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
+        flutter-version: '3.22.1'
     - name: Get dependencies
       run: |
         cd examples/flutter_camera
@@ -21,5 +22,4 @@ jobs:
       with:
           workingDir: examples/flutter_camera
           baseHref: /flutter-barcode-mrz-document-scanner/
-          customArgs: --release --base-href /flutter-barcode-mrz-document-scanner/
 
