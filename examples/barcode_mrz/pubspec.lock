@@ -184,10 +184,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_barcode_sdk
-      sha256: acf9a5d9309751b896ee250c165a33085697b515f2cff646458490cf5f4be730
+      sha256: "91b09bc00c68e6777d2bb60d8a03380f06f1bf74d7fc6783e991f7114fb13328"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   flutter_exif_rotation:
     dependency: "direct main"
     description:
@@ -216,10 +216,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_ocr_sdk
-      sha256: "77db7973c0e714904530471f5aebf3928b07a36ffb20ad5e2958896065cecc94"
+      sha256: "31f63b843d09f0f9a1691f9fc977e05a9560a1c2dd9647d3fb437a5ad1dbdb6c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

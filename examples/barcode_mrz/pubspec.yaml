@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_ocr_sdk: ^2.0.3
+  flutter_ocr_sdk: ^2.0.4
   cupertino_icons: ^1.0.2
   image_picker: ^1.0.0
   shared_preferences: ^2.1.1
@@ -20,7 +20,7 @@ dependencies:
   url_launcher: ^6.1.11
   flutter_exif_rotation: ^0.5.1
   flutter_lite_camera:
-  flutter_barcode_sdk: ^3.0.3
+  flutter_barcode_sdk: ^3.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
