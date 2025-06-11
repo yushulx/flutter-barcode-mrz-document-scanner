@@ -1,6 +1,6 @@
 # Flutter Document Scanner
 
-A Flutter project that demonstrates how to use [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/docs/introduction/?ver=latest) to scan and rectify documents on Windows, Android, iOS and web.
+A Flutter project that demonstrates how to use [flutter_document_scan_sdk](https://pub.dev/packages/flutter_document_scan_sdk) to scan and rectify documents on Windows, Android, iOS and web.
 
 https://github.com/user-attachments/assets/c6584bbe-0801-4379-a44f-ba982f432f34
 
@@ -32,8 +32,6 @@ https://github.com/user-attachments/assets/c6584bbe-0801-4379-a44f-ba982f432f34
 
     ![Flutter document editor](https://www.dynamsoft.com/codepool/img/2023/05/flutter-document-edge-editor.png)
     
-## Try Online Demo
-https://yushulx.me/flutter-camera-document-scanner
 
 ## Blog
 [Scan Documents Using Camera on Multiple Platforms: A Flutter Guide for Windows, Android, iOS, and Web](https://www.dynamsoft.com/codepool/flutter-camera-document-scanner.html)
