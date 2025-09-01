@@ -43,9 +43,9 @@ Widget createListView(BuildContext context) {
       itemBuilder: (context, index) {
         return ListTile(
           title: createURLString(
-              scanProvider.results.values.elementAt(index).barcodeText),
-          subtitle: Text(
-              scanProvider.results.values.elementAt(index).barcodeFormatString),
+              scanProvider.results.values.elementAt(index).text),
+          subtitle:
+              Text(scanProvider.results.values.elementAt(index).formatString),
         );
       });
 }

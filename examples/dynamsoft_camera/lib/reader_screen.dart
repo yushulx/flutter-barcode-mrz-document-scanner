@@ -21,8 +21,8 @@ class ReaderScreen extends StatefulWidget {
 class _ReaderScreenState extends State<ReaderScreen> {
   final _imagePicker = ImagePicker();
   String? _file;
-  List<BarcodeResult> _results = [];
-  late final DCVBarcodeReader _barcodeReader;
+  List<BarcodeResultItem> _results = [];
+  late final CaptureVisionRouter _cvr;
   late ScanProvider _scanProvider;
 
   @override
@@ -34,29 +34,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
   Future<void> _sdkInit() async {
     _scanProvider = Provider.of<ScanProvider>(context, listen: false);
 
-    _barcodeReader = await DCVBarcodeReader.createInstance();
-
-    // Get the current runtime settings of the barcode reader.
-    DBRRuntimeSettings currentSettings =
-        await _barcodeReader.getRuntimeSettings();
-    // Set the barcode format to read.
-
+    _cvr = CaptureVisionRouter.instance;
+    SimplifiedCaptureVisionSettings? currentSettings =
+        await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);
     if (_scanProvider.types != 0) {
-      currentSettings.barcodeFormatIds = _scanProvider.types;
+      currentSettings!.barcodeSettings!.barcodeFormatIds =
+          _scanProvider.types as BigInt;
     } else {
-      currentSettings.barcodeFormatIds = EnumBarcodeFormat.BF_ALL;
+      currentSettings!.barcodeSettings!.barcodeFormatIds =
+          EnumBarcodeFormat.all;
     }
 
-    // currentSettings.minResultConfidence = 70;
-    // currentSettings.minBarcodeTextLength = 50;
-
-    // Set the expected barcode count to 0 when you are not sure how many barcodes you are scanning.
-    // Set the expected barcode count to 1 can maximize the barcode decoding speed.
-    currentSettings.expectedBarcodeCount = 0;
+    currentSettings.barcodeSettings!.expectedBarcodesCount = 0;
     // Apply the new runtime settings to the barcode reader.
-    await _barcodeReader
-        .updateRuntimeSettingsFromTemplate(EnumDBRPresetTemplate.DEFAULT);
-    await _barcodeReader.updateRuntimeSettings(currentSettings);
+    await _cvr.updateSettings(EnumPresetTemplate.readBarcodes, currentSettings);
   }
 
   Widget getImage() {
@@ -85,14 +76,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 final rotatedImage = await FlutterExifRotation.rotateImage(
                     path: pickedFile.path);
                 _file = rotatedImage.path;
-                _results = await _barcodeReader.decodeFile(_file!) ?? [];
+                CapturedResult capturedResult = await _cvr.captureFile(
+                    _file!, EnumPresetTemplate.readBarcodes);
+                _results = capturedResult.decodedBarcodesResult!.items ?? [];
                 for (var i = 0; i < _results.length; i++) {
-                  if (_scanProvider.results
-                      .containsKey(_results[i].barcodeText)) {
+                  if (_scanProvider.results.containsKey(_results[i].text)) {
                     continue;
                   } else {
-                    _scanProvider.results[_results[i].barcodeText] =
-                        _results[i];
+                    _scanProvider.results[_results[i].text] = _results[i];
                   }
                 }
                 setState(() {});
@@ -109,14 +100,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 final rotatedImage = await FlutterExifRotation.rotateImage(
                     path: pickedFile.path);
                 _file = rotatedImage.path;
-                _results = await _barcodeReader.decodeFile(_file!) ?? [];
+                CapturedResult capturedResult = await _cvr.captureFile(
+                    _file!, EnumPresetTemplate.readBarcodes);
+                _results = capturedResult.decodedBarcodesResult!.items ?? [];
                 for (var i = 0; i < _results.length; i++) {
-                  if (_scanProvider.results
-                      .containsKey(_results[i].barcodeText)) {
+                  if (_scanProvider.results.containsKey(_results[i].text)) {
                     continue;
                   } else {
-                    _scanProvider.results[_results[i].barcodeText] =
-                        _results[i];
+                    _scanProvider.results[_results[i].text] = _results[i];
                   }
                 }
                 setState(() {});

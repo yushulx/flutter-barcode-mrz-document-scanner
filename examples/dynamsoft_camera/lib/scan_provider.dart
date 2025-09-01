@@ -11,11 +11,11 @@ class ScanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final Map<String, BarcodeResult> _results = {};
+  final Map<String, BarcodeResultItem> _results = {};
 
-  Map<String, BarcodeResult> get results => _results;
+  Map<String, BarcodeResultItem> get results => _results;
 
-  void addResult(String key, BarcodeResult result) {
+  void addResult(String key, BarcodeResultItem result) {
     _results[key] = result;
     notifyListeners();
   }

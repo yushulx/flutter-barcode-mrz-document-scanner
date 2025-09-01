@@ -50,8 +50,9 @@ class _MyHomePageState extends State<MyHomePage>
 
   Future<void> _initLicense() async {
     try {
-      await DCVBarcodeReader.initLicense(
+      final licenseResult = await LicenseManager.initLicense(
           'DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==');
+      print('License init: $licenseResult');
     } catch (e) {
       print(e);
     }

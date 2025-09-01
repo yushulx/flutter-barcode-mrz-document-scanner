@@ -3,19 +3,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dynamsoft_capture_vision_flutter/dynamsoft_capture_vision_flutter.dart';
 
-Widget createOverlay(List<BarcodeResult> results) {
+Widget createOverlay(List<BarcodeResultItem> results) {
   return CustomPaint(
     painter: OverlayPainter(results),
   );
 }
 
 class OverlayPainter extends CustomPainter {
-  final List<BarcodeResult> results;
+  final List<BarcodeResultItem> results;
 
   OverlayPainter(this.results) {
     results.sort((a, b) {
-      List<Point> aPoints = a.barcodeLocation.location.points;
-      List<Point> bPoints = b.barcodeLocation.location.points;
+      List<Point> aPoints = a.location.points;
+      List<Point> bPoints = b.location.points;
 
       if (((aPoints[0].y + aPoints[1].y + aPoints[2].y + aPoints[3].y) / 4 <
           (bPoints[0].y + bPoints[1].y + bPoints[2].y + bPoints[3].y) / 4)) {
@@ -28,24 +28,24 @@ class OverlayPainter extends CustomPainter {
       return 0;
     });
 
-    List<BarcodeResult> all = [];
+    List<BarcodeResultItem> all = [];
     int delta = 0;
     while (results.isNotEmpty) {
-      List<BarcodeResult> sortedResults = [];
-      BarcodeResult start = results[0];
+      List<BarcodeResultItem> sortedResults = [];
+      BarcodeResultItem start = results[0];
       sortedResults.add(start);
       results.remove(start);
 
-      List<Point> startPoints = start.barcodeLocation.location.points;
-      int maxHeight = [
+      List<Point> startPoints = start.location.points;
+      num maxHeight = [
         startPoints[0].y,
         startPoints[1].y,
         startPoints[2].y,
         startPoints[3].y
       ].reduce(max);
       while (results.isNotEmpty) {
-        BarcodeResult tmp = results[0];
-        List<Point> tmpPoints = tmp.barcodeLocation.location.points;
+        BarcodeResultItem tmp = results[0];
+        List<Point> tmpPoints = tmp.location.points;
         if ([tmpPoints[0].y, tmpPoints[1].y, tmpPoints[2].y, tmpPoints[3].y]
                 .reduce(min) <
             maxHeight + delta) {
@@ -57,8 +57,8 @@ class OverlayPainter extends CustomPainter {
       }
 
       sortedResults.sort(((a, b) {
-        List<Point> aPoints = a.barcodeLocation.location.points;
-        List<Point> bPoints = b.barcodeLocation.location.points;
+        List<Point> aPoints = a.location.points;
+        List<Point> bPoints = b.location.points;
         if (((aPoints[0].x + aPoints[1].x + aPoints[2].x + aPoints[3].x) / 4 <
             (bPoints[0].x + bPoints[1].x + bPoints[2].x + bPoints[3].x) / 4)) {
           return -1;
@@ -85,7 +85,7 @@ class OverlayPainter extends CustomPainter {
     int index = 0;
 
     for (var result in results) {
-      List<Point> points = result.barcodeLocation.location.points;
+      List<Point> points = result.location.points;
       double minX = points[0].x.toDouble();
       double minY = points[0].y.toDouble();
       if (points[1].x < minX) minX = points[1].x.toDouble();
@@ -120,7 +120,7 @@ class OverlayPainter extends CustomPainter {
 
       TextPainter textPainter = TextPainter(
         text: TextSpan(
-          text: result.barcodeText,
+          text: result.text,
           style: const TextStyle(
             color: Colors.yellow,
             fontSize: 100.0,
@@ -141,26 +141,27 @@ class OverlayPainter extends CustomPainter {
       results != oldDelegate.results;
 }
 
-List<BarcodeResult> rotate90barcode(List<BarcodeResult> input, int height) {
-  List<BarcodeResult> output = [];
-  for (BarcodeResult result in input) {
-    List<Point> points = result.barcodeLocation.location.points;
+List<BarcodeResultItem> rotate90barcode(
+    List<BarcodeResultItem> input, int height) {
+  List<BarcodeResultItem> output = [];
+  for (BarcodeResultItem result in input) {
+    List<Point> points = result.location.points;
 
-    int x1 = points[0].x;
-    int x2 = points[1].x;
-    int x3 = points[2].x;
-    int x4 = points[3].x;
-    int y1 = points[0].y;
-    int y2 = points[1].y;
-    int y3 = points[2].y;
-    int y4 = points[3].y;
+    num x1 = points[0].x;
+    num x2 = points[1].x;
+    num x3 = points[2].x;
+    num x4 = points[3].x;
+    num y1 = points[0].y;
+    num y2 = points[1].y;
+    num y3 = points[2].y;
+    num y4 = points[3].y;
 
-    result.barcodeLocation.location.points = [
-      Point.fromJson({'x': height - y1, 'y': x1}),
-      Point.fromJson({'x': height - y2, 'y': x2}),
-      Point.fromJson({'x': height - y3, 'y': x3}),
-      Point.fromJson({'x': height - y4, 'y': x4})
-    ];
+    // result.location.points = [
+    //   Point.fromJson({'x': height - y1, 'y': x1}),
+    //   Point.fromJson({'x': height - y2, 'y': x2}),
+    //   Point.fromJson({'x': height - y3, 'y': x3}),
+    //   Point.fromJson({'x': height - y4, 'y': x4})
+    // ];
 
     output.add(result);
   }

@@ -19,18 +19,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return WillPopScope(
       // override the pop action
       onWillPop: () async {
-        int format = 0;
+        BigInt format = BigInt.zero;
         if (_is1dChecked) {
-          format |= EnumBarcodeFormat.BF_ONED;
+          format |= EnumBarcodeFormat.oned;
         }
         if (_isQrChecked) {
-          format |= EnumBarcodeFormat.BF_QR_CODE;
+          format |= EnumBarcodeFormat.qrCode;
         }
         if (_isPdf417Checked) {
-          format |= EnumBarcodeFormat.BF_PDF417;
+          format |= EnumBarcodeFormat.pdf417;
         }
         if (_isDataMatrixChecked) {
-          format |= EnumBarcodeFormat.BF_DATAMATRIX;
+          format |= EnumBarcodeFormat.datamatrix;
         }
         Navigator.pop(context, {'format': format});
         return true;

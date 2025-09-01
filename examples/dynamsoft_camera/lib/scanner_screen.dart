@@ -22,11 +22,10 @@ class ScannerScreen extends StatefulWidget {
 
 class _ScannerScreenState extends State<ScannerScreen>
     with WidgetsBindingObserver {
-  late final DCVCameraEnhancer _cameraEnhancer;
-  late final DCVBarcodeReader _barcodeReader;
+  late final CameraEnhancer _cameraEnhancer;
+  late final CaptureVisionRouter _cvr;
 
-  final DCVCameraView _cameraView = DCVCameraView();
-  List<BarcodeResult> decodeRes = [];
+  List<BarcodeResultItem> decodeRes = [];
   String? resultText;
   bool faceLens = false;
 
@@ -51,70 +50,50 @@ class _ScannerScreenState extends State<ScannerScreen>
   Future<void> _sdkInit() async {
     _scanProvider = Provider.of<ScanProvider>(context, listen: false);
 
-    _barcodeReader = await DCVBarcodeReader.createInstance();
-    _cameraEnhancer = await DCVCameraEnhancer.createInstance();
+    _cvr = await CaptureVisionRouter.instance;
+    _cameraEnhancer = CameraEnhancer.instance;
 
-    // Get the current runtime settings of the barcode reader.
-    DBRRuntimeSettings currentSettings =
-        await _barcodeReader.getRuntimeSettings();
-    // Set the barcode format to read.
-
+    SimplifiedCaptureVisionSettings? currentSettings =
+        await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);
     if (_scanProvider.types != 0) {
-      currentSettings.barcodeFormatIds = _scanProvider.types;
+      currentSettings!.barcodeSettings!.barcodeFormatIds =
+          _scanProvider.types as BigInt;
     } else {
-      currentSettings.barcodeFormatIds = EnumBarcodeFormat.BF_ALL;
+      currentSettings!.barcodeSettings!.barcodeFormatIds =
+          EnumBarcodeFormat.all;
     }
 
-    // currentSettings.minResultConfidence = 70;
-    // currentSettings.minBarcodeTextLength = 50;
-
-    // Set the expected barcode count to 0 when you are not sure how many barcodes you are scanning.
-    // Set the expected barcode count to 1 can maximize the barcode decoding speed.
-    currentSettings.expectedBarcodeCount = 0;
+    currentSettings.barcodeSettings!.expectedBarcodesCount = 0;
     // Apply the new runtime settings to the barcode reader.
-    await _barcodeReader
-        .updateRuntimeSettingsFromTemplate(EnumDBRPresetTemplate.DEFAULT);
-    await _barcodeReader.updateRuntimeSettings(currentSettings);
+    await _cvr.updateSettings(EnumPresetTemplate.readBarcodes, currentSettings);
 
-    // Define the scan region.
-    // _cameraEnhancer.setScanRegion(Region(
-    //     regionTop: 30,
-    //     regionLeft: 15,
-    //     regionBottom: 70,
-    //     regionRight: 85,
-    //     regionMeasuredByPercentage: 1));
+    // Bind the `CameraEnhancer` object to the `CaptureVisionRouter` object
+    _cvr.setInput(_cameraEnhancer);
 
-    // Enable barcode overlay visiblity.
-    // _cameraView.overlayVisible = true;
-
-    _cameraView.torchButton = TorchButton(
-      visible: true,
-    );
-
-    await _barcodeReader.enableResultVerification(true);
-
-    // Stream listener to handle callback when barcode result is returned.
-    _barcodeReader.receiveResultStream().listen((List<BarcodeResult>? res) {
-      if (mounted) {
-        decodeRes = res ?? [];
-        if (Platform.isAndroid && isPortrait) {
-        decodeRes =
-            rotate90barcode(decodeRes, _previewHeight.toInt());
-      }
-        String msg = '';
-        for (var i = 0; i < decodeRes.length; i++) {
-          msg += '${decodeRes[i].barcodeText}\n';
-
-          if (_scanProvider.results.containsKey(decodeRes[i].barcodeText)) {
-            continue;
-          } else {
-            _scanProvider.results[decodeRes[i].barcodeText] = decodeRes[i];
+    // Add `CapturedResultReceiver`
+    late final CapturedResultReceiver _receiver = CapturedResultReceiver()
+      ..onDecodedBarcodesReceived = (DecodedBarcodesResult result) async {
+        List<BarcodeResultItem>? res = result.items;
+        if (mounted) {
+          decodeRes = res ?? [];
+          if (Platform.isAndroid && isPortrait) {
+            decodeRes = rotate90barcode(decodeRes, _previewHeight.toInt());
           }
-        }
+          String msg = '';
+          for (var i = 0; i < decodeRes.length; i++) {
+            msg += '${decodeRes[i].text}\n';
 
-        setState(() {});
-      }
-    });
+            if (_scanProvider.results.containsKey(decodeRes[i].text)) {
+              continue;
+            } else {
+              _scanProvider.results[decodeRes[i].text] = decodeRes[i];
+            }
+          }
+
+          setState(() {});
+        }
+      };
+    _cvr.addResultReceiver(_receiver);
 
     start();
   }
@@ -143,14 +122,14 @@ class _ScannerScreenState extends State<ScannerScreen>
   }
 
   Widget listItem(BuildContext context, int index) {
-    BarcodeResult res = decodeRes[index];
+    BarcodeResultItem res = decodeRes[index];
 
     return ListTileTheme(
         textColor: Colors.white,
         // tileColor: Colors.green,
         child: ListTile(
-          title: Text(res.barcodeText),
-          subtitle: Text(res.barcodeFormatString),
+          title: Text(res.text),
+          subtitle: Text(res.formatString),
         ));
   }
 
@@ -158,13 +137,13 @@ class _ScannerScreenState extends State<ScannerScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _cameraEnhancer.close();
-    _barcodeReader.stopScanning();
+    _cvr.stopCapturing();
     super.dispose();
   }
 
   Future<void> stop() async {
     await _cameraEnhancer.close();
-    await _barcodeReader.stopScanning();
+    await _cvr.stopCapturing();
   }
 
   Future<void> start() async {
@@ -172,8 +151,7 @@ class _ScannerScreenState extends State<ScannerScreen>
     setState(() {});
 
     Future.delayed(const Duration(milliseconds: 100), () async {
-      // _cameraView.overlayVisible = true;
-      await _barcodeReader.startScanning();
+      await _cvr.startCapturing(EnumPresetTemplate.readBarcodes);
       await _cameraEnhancer.open();
     });
   }
@@ -187,29 +165,29 @@ class _ScannerScreenState extends State<ScannerScreen>
     }
 
     SizedBox fullscreen = SizedBox(
-              width: screenWidth,
-              height: screenHeight,
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      width: isPortrait ? _previewHeight : _previewWidth,
-                      height: isPortrait ? _previewWidth : _previewHeight,
-                      child: _cameraView,
-                    ),
-                    Positioned(
-                        left: 0,
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: createOverlay(
-                          decodeRes,
-                        ))
-                  ],
-                ),
-              ),
-            );
+      width: screenWidth,
+      height: screenHeight,
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            SizedBox(
+              width: isPortrait ? _previewHeight : _previewWidth,
+              height: isPortrait ? _previewWidth : _previewHeight,
+              child: CameraView(cameraEnhancer: _cameraEnhancer),
+            ),
+            Positioned(
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: createOverlay(
+                  decodeRes,
+                ))
+          ],
+        ),
+      ),
+    );
 
     if (switchValue) {
       return Stack(
@@ -233,7 +211,7 @@ class _ScannerScreenState extends State<ScannerScreen>
               child: SizedBox(
                 width: 160,
                 height: 160,
-                child: _cameraView,
+                child: CameraView(cameraEnhancer: _cameraEnhancer),
               ),
             ),
           Positioned(
