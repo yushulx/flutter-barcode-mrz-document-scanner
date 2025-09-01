@@ -92,3 +92,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+dependency_overrides:
+  share_plus: ^11.1.0
+  path_provider: ^2.1.5
