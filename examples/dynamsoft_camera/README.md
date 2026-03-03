@@ -22,4 +22,4 @@ https://github.com/user-attachments/assets/a67e6607-245e-4aea-9cdc-db742de84b4b
 
 
 ## Blog
-[Building Multiple Barcode, QR Code and DataMatrix Scanner with Flutter for Inventory Management](https://www.dynamsoft.com/codepool/multiple-barcode-qrcode-scanner-android-ios.html)
+[Flutter Barcode Scanner: Scanning Multiple Barcodes, QR Codes, and DataMatrix Codes for Inventory Management](https://www.dynamsoft.com/codepool/flutter-multiple-barcode-qrcode-scanner-android-ios.html)
