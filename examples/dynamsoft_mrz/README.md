@@ -2,6 +2,7 @@
 
 A **production-ready** Flutter mobile app that reads Machine Readable Zone (MRZ) data from passports, ID cards, and other ICAO-compliant travel documents using the [Dynamsoft MRZ Scanner SDK](https://www.dynamsoft.com/use-cases/mrz-scanner/).
 
+https://github.com/user-attachments/assets/a3993b7d-c153-42f3-a8f1-6871b4913920
 
 ## Features
 
@@ -85,5 +86,6 @@ flutter build appbundle --release
 Build and archive via Xcode (`Product → Archive`) after setting your provisioning profile.
 
 
-
+## Blog
+[How to Build a Flutter MRZ Scanner App for Android and iOS](https://www.dynamsoft.com/codepool/flutter-mrz-scanner-android-ios.html)
 
