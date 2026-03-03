@@ -32,7 +32,7 @@ A **production-ready** Flutter mobile app that reads Machine Readable Zone (MRZ)
 
 ## Getting started
 
-### 1 — Clone and fetch dependencies
+### 1. Clone and fetch dependencies
 
 ```bash
 git clone https://github.com/yushulx/flutter-barcode-mrz-document-scanner.git
@@ -40,14 +40,14 @@ cd flutter-barcode-mrz-document-scanner/examples/dynamsoft_mrz
 flutter pub get
 ```
 
-### 2 — Configure your license key
+### 2. Configure your license key
 
 Open [`lib/config/app_config.dart`](lib/config/app_config.dart) and replace the value of `licenseKey` with your own key.
 
 The bundled key is a **time-limited trial** that requires a network connection. Request a free 30-day full trial at:
 <https://www.dynamsoft.com/customer/license/trialLicense/?product=dcv&package=cross-platform>
 
-### 3 — Run on Android
+### 3. Run on Android
 
 Connect a physical device (API 21+) and run:
 
@@ -57,7 +57,7 @@ flutter run -d <DEVICE_ID>
 
 List connected devices with `flutter devices`.
 
-### 4 — Run on iOS
+### 4. Run on iOS
 
 ```bash
 cd ios/
