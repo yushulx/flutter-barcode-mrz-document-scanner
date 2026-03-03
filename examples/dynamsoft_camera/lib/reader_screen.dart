@@ -135,7 +135,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         left: 0.0,
                         child: _results.isEmpty
                             ? Container(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 child: const Center(
                                   child: Text(
                                     'No barcode detected',

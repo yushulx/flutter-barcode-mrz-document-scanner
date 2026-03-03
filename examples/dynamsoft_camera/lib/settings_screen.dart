@@ -16,9 +16,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      // override the pop action
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
         BigInt format = BigInt.zero;
         if (_is1dChecked) {
           format |= EnumBarcodeFormat.oned;
@@ -32,8 +33,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (_isDataMatrixChecked) {
           format |= EnumBarcodeFormat.datamatrix;
         }
+        // ignore: use_build_context_synchronously
         Navigator.pop(context, {'format': format});
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

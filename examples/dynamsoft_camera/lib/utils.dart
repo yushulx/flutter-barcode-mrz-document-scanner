@@ -16,7 +16,7 @@ Widget createURLString(String text) {
   if (urlRegExp.hasMatch(text)) {
     return InkWell(
       onLongPress: () {
-        Share.share(text, subject: 'Scan Result');
+        SharePlus.instance.share(ShareParams(text: text, subject: 'Scan Result'));
       },
       child: Text(
         text,
@@ -29,7 +29,7 @@ Widget createURLString(String text) {
   } else {
     return InkWell(
       onLongPress: () async {
-        Share.share(text, subject: 'Scan Result');
+        SharePlus.instance.share(ShareParams(text: text, subject: 'Scan Result'));
       },
       child: Text(text),
     );

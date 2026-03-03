@@ -145,24 +145,6 @@ List<BarcodeResultItem> rotate90barcode(
     List<BarcodeResultItem> input, int height) {
   List<BarcodeResultItem> output = [];
   for (BarcodeResultItem result in input) {
-    List<Point> points = result.location.points;
-
-    num x1 = points[0].x;
-    num x2 = points[1].x;
-    num x3 = points[2].x;
-    num x4 = points[3].x;
-    num y1 = points[0].y;
-    num y2 = points[1].y;
-    num y3 = points[2].y;
-    num y4 = points[3].y;
-
-    // result.location.points = [
-    //   Point.fromJson({'x': height - y1, 'y': x1}),
-    //   Point.fromJson({'x': height - y2, 'y': x2}),
-    //   Point.fromJson({'x': height - y3, 'y': x3}),
-    //   Point.fromJson({'x': height - y4, 'y': x4})
-    // ];
-
     output.add(result);
   }
 

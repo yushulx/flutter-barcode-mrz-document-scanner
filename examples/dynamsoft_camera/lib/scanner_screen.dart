@@ -37,8 +37,8 @@ class _ScannerScreenState extends State<ScannerScreen>
   bool isPortrait = false;
   double screenWidth = 0;
   double screenHeight = 0;
-  double _previewHeight = 1080;
-  double _previewWidth = 1920;
+  final double _previewHeight = 1080;
+  final double _previewWidth = 1920;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   Future<void> _sdkInit() async {
     _scanProvider = Provider.of<ScanProvider>(context, listen: false);
 
-    _cvr = await CaptureVisionRouter.instance;
+    _cvr = CaptureVisionRouter.instance;
     _cameraEnhancer = CameraEnhancer.instance;
 
     SimplifiedCaptureVisionSettings? currentSettings =
@@ -71,7 +71,7 @@ class _ScannerScreenState extends State<ScannerScreen>
     _cvr.setInput(_cameraEnhancer);
 
     // Add `CapturedResultReceiver`
-    late final CapturedResultReceiver _receiver = CapturedResultReceiver()
+    final CapturedResultReceiver receiver = CapturedResultReceiver()
       ..onDecodedBarcodesReceived = (DecodedBarcodesResult result) async {
         List<BarcodeResultItem>? res = result.items;
         if (mounted) {
@@ -79,10 +79,7 @@ class _ScannerScreenState extends State<ScannerScreen>
           if (Platform.isAndroid && isPortrait) {
             decodeRes = rotate90barcode(decodeRes, _previewHeight.toInt());
           }
-          String msg = '';
           for (var i = 0; i < decodeRes.length; i++) {
-            msg += '${decodeRes[i].text}\n';
-
             if (_scanProvider.results.containsKey(decodeRes[i].text)) {
               continue;
             } else {
@@ -93,7 +90,7 @@ class _ScannerScreenState extends State<ScannerScreen>
           setState(() {});
         }
       };
-    _cvr.addResultReceiver(_receiver);
+    _cvr.addResultReceiver(receiver);
 
     start();
   }
@@ -333,6 +330,9 @@ class _ScannerScreenState extends State<ScannerScreen>
         // TODO: Handle this case.
         break;
       case AppLifecycleState.detached:
+        // TODO: Handle this case.
+        break;
+      case AppLifecycleState.hidden:
         // TODO: Handle this case.
         break;
     }
