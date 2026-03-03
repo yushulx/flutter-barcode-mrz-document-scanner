@@ -86,5 +86,6 @@ flutter build appbundle --release
 Build and archive via Xcode (`Product → Archive`) after setting your provisioning profile.
 
 
-
+## Blog
+[How to Build a Flutter MRZ Scanner App for Android and iOS](https://www.dynamsoft.com/codepool/flutter-mrz-scanner-android-ios.html)
 
