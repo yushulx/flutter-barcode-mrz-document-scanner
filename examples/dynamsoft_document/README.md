@@ -96,3 +96,6 @@ Add the following entries to `ios/Runner/Info.plist`:
 <key>NSPhotoLibraryUsageDescription</key>
 <string>DocScan saves scanned documents to your photo library.</string>
 ```
+
+## Blog
+[https://www.dynamsoft.com/codepool/flutter-document-scanner-app-android-ios.html](https://www.dynamsoft.com/codepool/flutter-document-scanner-app-android-ios.html)
