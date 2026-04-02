@@ -7,7 +7,7 @@ class AppConstants {
   // ---------------------------------------------------------------------------
   /// Replace with your own Dynamsoft license key obtained from
   /// https://www.dynamsoft.com/customer/license/trialLicense
-  static const String licenseKey = 'DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9';
+  static const String licenseKey = 'DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==';
 
   // ---------------------------------------------------------------------------
   // App Metadata
