@@ -2,6 +2,8 @@
 
 A Flutter document scanner app powered by the [Dynamsoft Capture Vision SDK](https://www.dynamsoft.com/capture-vision/docs/introduction/). Point your camera at any document — receipts, ID cards, contracts, forms — and get a clean, deskewed, perspective-corrected image in seconds.
 
+https://github.com/user-attachments/assets/8d832b58-cf8c-4d60-85cf-00df405ec189
+
 ## Features
 
 | Feature | Description |
