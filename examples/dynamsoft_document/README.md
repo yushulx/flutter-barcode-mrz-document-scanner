@@ -3,6 +3,11 @@
 A Flutter document scanner app powered by the [Dynamsoft Capture Vision SDK](https://www.dynamsoft.com/capture-vision/docs/introduction/). Point your camera at any document — receipts, ID cards, contracts, forms — and get a clean, deskewed, perspective-corrected image in seconds.
 
 
+
+https://github.com/user-attachments/assets/3d730b36-ca18-48b5-bb02-ea58dd2c5115
+
+
+
 ## Features
 
 | Feature | Description |
@@ -91,3 +96,6 @@ Add the following entries to `ios/Runner/Info.plist`:
 <key>NSPhotoLibraryUsageDescription</key>
 <string>DocScan saves scanned documents to your photo library.</string>
 ```
+
+## Blog
+[https://www.dynamsoft.com/codepool/flutter-document-scanner-app-android-ios.html](https://www.dynamsoft.com/codepool/flutter-document-scanner-app-android-ios.html)
