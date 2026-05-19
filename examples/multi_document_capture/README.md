@@ -2,6 +2,8 @@
 
 A Flutter document scanner app powered by the [Dynamsoft Capture Vision SDK](https://www.dynamsoft.com/capture-vision/docs/introduction/). Point your camera at any document — receipts, ID cards, contracts, forms — and get a clean, deskewed, perspective-corrected image in seconds.
 
+https://github.com/user-attachments/assets/8d832b58-cf8c-4d60-85cf-00df405ec189
+
 ## Features
 
 | Feature | Description |
@@ -148,3 +150,6 @@ Open the settings dialog from the camera page (gear icon, top-right) to adjust:
 | IoU Threshold | 0.85 | 0.50 – 1.00 | Minimum bounding-box Intersection over Union between consecutive frames |
 | Area Delta Threshold | 0.15 | 0.01 – 0.50 | Maximum relative change in quad area between consecutive frames |
 | Stable Frame Count | 3 | 1 – 10 | Number of consecutive stable frames before auto-capture fires |
+
+## Blog
+[How to Build a Flutter Document Scanner App with Edge Detection, Editing, and PDF Export](https://www.dynamsoft.com/codepool/build-flutter-mobile-document-scanner.html)
