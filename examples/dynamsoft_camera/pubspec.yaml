@@ -36,7 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  dynamsoft_capture_vision_flutter: ^3.2.5000
+  dynamsoft_capture_vision_flutter: ^3.4.1200
   provider: ^6.1.5+1
   url_launcher: ^6.3.2
   share_plus: ^12.0.1

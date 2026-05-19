@@ -44,6 +44,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    PermissionUtil.requestCameraPermission();
     _sdkInit();
   }
 
@@ -92,7 +93,7 @@ class _ScannerScreenState extends State<ScannerScreen>
       };
     _cvr.addResultReceiver(receiver);
 
-    start();
+    await start();
   }
 
   Widget createURLString(String text) {
@@ -139,6 +140,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   }
 
   Future<void> stop() async {
+    _isCameraReady = false;
     await _cameraEnhancer.close();
     await _cvr.stopCapturing();
   }
