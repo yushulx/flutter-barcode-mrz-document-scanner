@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: dynamsoft_capture_vision_flutter
-      sha256: ddf99459ddbdb6bf70eaf348c8d9507972e8c3cbcceaa3a90e990010e56e381a
+      sha256: cad210abd7d68b2909fedc563f9025600fab57e9672c2cb87fec51e16404af64
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.5000"
+    version: "3.4.3000"
   fake_async:
     dependency: transitive
     description:
