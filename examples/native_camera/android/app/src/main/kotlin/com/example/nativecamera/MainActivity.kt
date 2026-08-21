@@ -18,9 +18,15 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.dynamsoft.dbr.BarcodeReader
-import com.dynamsoft.dbr.EnumImagePixelFormat
-import com.dynamsoft.dbr.TextResult
+import com.dynamsoft.core.basic_structures.CapturedResultItem
+import com.dynamsoft.core.basic_structures.EnumCapturedResultItemType
+import com.dynamsoft.core.basic_structures.EnumImagePixelFormat
+import com.dynamsoft.core.basic_structures.ImageData
+import com.dynamsoft.cvr.CapturedResult
+import com.dynamsoft.cvr.CaptureVisionRouter
+import com.dynamsoft.cvr.EnumPresetTemplate
+import com.dynamsoft.dbr.BarcodeResultItem
+import com.dynamsoft.license.LicenseManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -48,7 +54,7 @@ class MainActivity : FlutterActivity(), ActivityAware {
     private var previewHeight = 720
 
     fun setLicense(license: String?) {
-        BarcodeReader.initLicense(license) { isSuccessful, e ->
+        LicenseManager.initLicense(license) { isSuccessful, e ->
             if (isSuccessful) {
                 // The license verification was successful.
             } else {
@@ -314,7 +320,7 @@ class MainActivity : FlutterActivity(), ActivityAware {
     override fun onReattachedToActivityForConfigChanges(p0: ActivityPluginBinding) {}
 
     private class ImageAnalyzer(listener: ResultListener? = null) : ImageAnalysis.Analyzer {
-        private val mBarcodeReader: BarcodeReader = BarcodeReader()
+        private val mRouter: CaptureVisionRouter = CaptureVisionRouter()
         private val listeners = ArrayList<ResultListener>().apply { listener?.let { add(it) } }
 
         private fun ByteBuffer.toByteArray(): ByteArray {
@@ -338,40 +344,44 @@ class MainActivity : FlutterActivity(), ActivityAware {
             // Extract image data from callback object
             val data = buffer.toByteArray()
 
-            // Read barcode from image data
-            val results =
-                    mBarcodeReader?.decodeBuffer(
-                            data,
-                            image.width,
-                            image.height,
-                            stride,
-                            EnumImagePixelFormat.IPF_NV21
-                    )
+            // Wrap the camera frame as ImageData consumed by the Capture Vision SDK
+            val imageData = ImageData()
+            imageData.bytes = data
+            imageData.width = image.width
+            imageData.height = image.height
+            imageData.stride = stride
+            imageData.format = EnumImagePixelFormat.IPF_NV21
+
+            // Read barcode from image data with the Capture Vision Router
+            val results = mRouter.capture(imageData, EnumPresetTemplate.PT_READ_BARCODES)
+
             // Call all listeners with new value
             listeners.forEach { it(wrapResults(results)) }
 
             image.close()
         }
 
-        private fun wrapResults(results: Array<TextResult>?): List<Map<String, Any>> {
+        private fun wrapResults(result: CapturedResult): List<Map<String, Any>> {
             val out = mutableListOf<Map<String, Any>>()
-            if (results != null) {
-                for (result in results) {
-                    val data: MutableMap<String, Any> = HashMap()
-                    data["format"] = result.barcodeFormatString
-                    // data.put("text", result.barcodeText);
-                    data["x1"] = result.localizationResult.resultPoints[0].x
-                    data["y1"] = result.localizationResult.resultPoints[0].y
-                    data["x2"] = result.localizationResult.resultPoints[1].x
-                    data["y2"] = result.localizationResult.resultPoints[1].y
-                    data["x3"] = result.localizationResult.resultPoints[2].x
-                    data["y3"] = result.localizationResult.resultPoints[2].y
-                    data["x4"] = result.localizationResult.resultPoints[3].x
-                    data["y4"] = result.localizationResult.resultPoints[3].y
-                    data["angle"] = result.localizationResult.angle
-                    data["barcodeBytes"] = result.barcodeBytes
-                    out.add(data)
-                }
+            val items: Array<CapturedResultItem> = result.items ?: return out
+            for (item in items) {
+                if (item.type != EnumCapturedResultItemType.CRIT_BARCODE) continue
+                val barcodeItem = item as BarcodeResultItem
+                val data: MutableMap<String, Any> = HashMap()
+                data["format"] = barcodeItem.formatString
+                // data.put("text", barcodeItem.text);
+                val points = barcodeItem.location.points
+                data["x1"] = points[0].x
+                data["y1"] = points[0].y
+                data["x2"] = points[1].x
+                data["y2"] = points[1].y
+                data["x3"] = points[2].x
+                data["y3"] = points[2].y
+                data["x4"] = points[3].x
+                data["y4"] = points[3].y
+                data["angle"] = barcodeItem.angle
+                data["barcodeBytes"] = barcodeItem.bytes
+                out.add(data)
             }
             return out
         }
