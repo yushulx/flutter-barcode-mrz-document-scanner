@@ -52,4 +52,5 @@ Here are the steps:
 ![Flutter iOS QR code scanner](https://www.dynamsoft.com/codepool/img/2024/05/ios-camera-flutter-qr-code-scanner.png)
 
 ## Blog
-[Implementing Flutter QR Code Scanner with Swift and AVFoundation for iOS](https://www.dynamsoft.com/codepool/ios-native-camera-flutter-qr-code-scanner.html)
+- [Implementing Flutter QR Code Scanner with Swift and AVFoundation for iOS](https://www.dynamsoft.com/codepool/ios-native-camera-flutter-qr-code-scanner.html)
+- [Implementing a Flutter Barcode Scanner with Kotlin, CameraX, and Dynamsoft Barcode Reader Bundle](https://www.dynamsoft.com/codepool/barcode-scanner-flutter-android-native-camera.html)
