@@ -23,14 +23,14 @@ The Flutter project demonstrates how to implement a camera preview using native 
     Update the license key in the `AppDelegate.swift` file:
 
     ```swift
-    DynamsoftBarcodeReader.initLicense("LICENSE-KEY", verificationDelegate: self)
+    LicenseManager.initLicense("LICENSE-KEY", verificationDelegate: self)
     ```
 
 ## Why Not Use a Flutter Plugin?
 Memory consumption and performance are the main reasons for not using a plugin, especially when you want to process camera frames in real-time. The communication between Dart and native code is expensive and can cause performance issues.
 
 ## Usage
-The sample shows how to scan barcodes live using the Dynamsoft Barcode Reader Bundle SDK (`com.dynamsoft:barcodereaderbundle`) on Android. You can replace the barcode reader with your own image processing algorithms.
+The sample shows how to scan barcodes live using the Dynamsoft Barcode Reader Bundle SDK (`com.dynamsoft:barcodereaderbundle` on Android and `DynamsoftBarcodeReaderBundle` on iOS). You can replace the barcode reader with your own image processing algorithms.
 
 Here are the steps:
 
@@ -44,7 +44,7 @@ Here are the steps:
 **iOS**
 1. Open the `AppDelegate.swift` file.
 2. Find the method `func processImage(_ sampleBuffer: CMSampleBuffer)` and replace the code with your own image processing algorithms.
-3. Find the line `self.channel?.invokeMethod("onBarcodeDetected", arguments: self.wrapResults(results: results))` to send the results to Dart.
+3. Find the line `self.channel?.invokeMethod("onBarcodeDetected", arguments: self.wrapResults(capturedResult: capturedResult))` to send the results to Dart.
 4. Update the `CameraPreviewScreen.dart` file to handle the results.
 
 ## Screenshots
