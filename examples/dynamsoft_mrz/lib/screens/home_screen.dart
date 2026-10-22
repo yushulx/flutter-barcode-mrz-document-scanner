@@ -84,58 +84,67 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Hero illustration
-                    Container(
-                      width: size.width * 0.55,
-                      height: size.width * 0.55,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer,
-                        shape: BoxShape.circle,
+                child: LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                      child: Icon(
-                        Icons.document_scanner_outlined,
-                        size: size.width * 0.28,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Hero illustration
+                          Container(
+                            width: size.width * 0.55,
+                            height: size.width * 0.55,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primaryContainer,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.document_scanner_outlined,
+                              size: size.width * 0.28,
+                              color: theme.colorScheme.onPrimaryContainer,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
 
-                    Text(
-                      'MRZ Scanner',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Point your camera at the Machine Readable Zone '
-                      '(MRZ) on a passport, ID card, or travel document '
-                      'to extract the encoded information instantly.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        height: 1.5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 40),
+                          Text(
+                            'MRZ Scanner',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Point your camera at the Machine Readable Zone '
+                            '(MRZ) on a passport, ID card, or travel document '
+                            'to extract the encoded information instantly.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 40),
 
-                    // Supported document chips
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      alignment: WrapAlignment.center,
-                      children: const [
-                        _DocTypeChip(label: 'Passport (TD3)'),
-                        _DocTypeChip(label: 'ID Card (TD1)'),
-                        _DocTypeChip(label: 'ID Card (TD2)'),
-                      ],
+                          // Supported document chips
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: const [
+                              _DocTypeChip(label: 'Passport (TD3)'),
+                              _DocTypeChip(label: 'ID Card (TD1)'),
+                              _DocTypeChip(label: 'ID Card (TD2)'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -154,7 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : const Icon(Icons.document_scanner_outlined),
-                  label: Text(_isScanning ? 'Opening Scanner…' : 'Scan Document'),
+                  label: Text(
+                    _isScanning ? 'Opening Scanner…' : 'Scan Document',
+                  ),
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(
