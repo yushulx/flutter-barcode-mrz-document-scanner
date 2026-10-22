@@ -34,7 +34,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   Future<void> _sdkInit() async {
     _scanProvider = Provider.of<ScanProvider>(context, listen: false);
 
-    _cvr = CaptureVisionRouter.instance;
+    _cvr = CaptureVisionRouter();
     SimplifiedCaptureVisionSettings? currentSettings =
         await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);
     if (_scanProvider.types != 0) {

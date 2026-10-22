@@ -352,8 +352,8 @@ The Flutter barcode scanner plugin can be used as follows:
     Future<void> _sdkInit() async {
       _scanProvider = Provider.of<ScanProvider>(context, listen: false);
 
-      _cvr = CaptureVisionRouter.instance;
-      _cameraEnhancer = CameraEnhancer.instance;
+      _cvr = CaptureVisionRouter();
+      _cameraEnhancer = CameraEnhancer();
 
       SimplifiedCaptureVisionSettings? currentSettings =
         await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);

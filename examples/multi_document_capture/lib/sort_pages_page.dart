@@ -74,9 +74,8 @@ class _SortPagesPageState extends State<SortPagesPage> {
             child: ReorderableListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: _workingList.length,
-              onReorder: (oldIndex, newIndex) {
+              onReorderItem: (oldIndex, newIndex) {
                 setState(() {
-                  if (newIndex > oldIndex) newIndex--;
                   final item = _workingList.removeAt(oldIndex);
                   _workingList.insert(newIndex, item);
                 });

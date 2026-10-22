@@ -16,7 +16,7 @@ class ScannerPage extends StatefulWidget {
 class _ScannerPageState extends State<ScannerPage> with RouteAware {
   // ── SDK objects ──────────────────────────────────────────────────────────
   late final CaptureVisionRouter _cvr;
-  final CameraEnhancer _camera = CameraEnhancer.instance;
+  final CameraEnhancer _camera = CameraEnhancer();
   final String _template = EnumPresetTemplate.detectAndNormalizeDocument;
   late final CapturedResultReceiver _receiver;
 
@@ -37,7 +37,7 @@ class _ScannerPageState extends State<ScannerPage> with RouteAware {
 
   Future<void> _initSdk() async {
     // Initialise the CVR with a cross-verification filter for stable results.
-    _cvr = CaptureVisionRouter.instance
+    _cvr = CaptureVisionRouter()
       ..addResultFilter(
         MultiFrameResultCrossFilter()
           ..enableResultCrossVerification(
