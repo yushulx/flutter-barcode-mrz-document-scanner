@@ -1,10 +1,10 @@
 PODS:
-  - DynamsoftBarcodeReaderBundle (11.6.2000):
-    - DynamsoftCaptureVisionBundle (= 3.6.2000)
-  - DynamsoftCaptureVisionBundle (3.6.2000)
+  - DynamsoftBarcodeReaderBundle (11.6.4000):
+    - DynamsoftCaptureVisionBundle (= 3.6.4000)
+  - DynamsoftCaptureVisionBundle (3.6.4000)
 
 DEPENDENCIES:
-  - DynamsoftBarcodeReaderBundle (= 11.6.2000)
+  - DynamsoftBarcodeReaderBundle (= 11.6.4000)
 
 SPEC REPOS:
   trunk:
@@ -12,9 +12,9 @@ SPEC REPOS:
     - DynamsoftCaptureVisionBundle
 
 SPEC CHECKSUMS:
-  DynamsoftBarcodeReaderBundle: 30579a93f0fd98be0ac4a2acbfdd8ddfd2799592
-  DynamsoftCaptureVisionBundle: 786952063fff6881847ed1644069cdc57e5cd815
+  DynamsoftBarcodeReaderBundle: 2d91b0141e29e03b98d085212064dbe2275aa8a0
+  DynamsoftCaptureVisionBundle: 563c1cc75430259492fa50dd1e91927e61fe57e9
 
-PODFILE CHECKSUM: d622be54503f7ad0a9aac1f8553760ab7883f506
+PODFILE CHECKSUM: 50391312a92f53f20dc12dca17dc6dd32710b82d
 
 COCOAPODS: 1.16.2

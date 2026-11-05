@@ -11,6 +11,6 @@ target 'Runner' do
     # Pods for testing
   end
 
-  pod 'DynamsoftBarcodeReaderBundle','11.6.2000'
+  pod 'DynamsoftBarcodeReaderBundle','11.6.4000'
 
 end
