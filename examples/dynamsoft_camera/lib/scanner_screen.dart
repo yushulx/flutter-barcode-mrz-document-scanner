@@ -8,9 +8,6 @@ import 'history_view.dart';
 import 'overlay_painter.dart';
 import 'scan_provider.dart';
 import 'switch_provider.dart';
-
-import 'package:url_launcher/url_launcher_string.dart';
-
 import 'utils.dart';
 
 class ScannerScreen extends StatefulWidget {
@@ -26,8 +23,6 @@ class _ScannerScreenState extends State<ScannerScreen>
   late final CaptureVisionRouter _cvr;
 
   List<BarcodeResultItem> decodeRes = [];
-  String? resultText;
-  bool faceLens = false;
 
   bool _isFlashOn = false;
   bool _isScanning = true;
@@ -91,53 +86,26 @@ class _ScannerScreenState extends State<ScannerScreen>
     await start();
   }
 
-  Widget createURLString(String text) {
-    // Create a regular expression to match URL strings.
-    RegExp urlRegExp = RegExp(
-      r'^(https?|http)://[^\s/$.?#].[^\s]*$',
-      caseSensitive: false,
-      multiLine: false,
-    );
-
-    if (urlRegExp.hasMatch(text)) {
-      return InkWell(
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.blue),
-        ),
-        onTap: () async {
-          launchUrlString(text);
-        },
-      );
-    } else {
-      return Text(text);
-    }
-  }
-
-  Widget listItem(BuildContext context, int index) {
-    BarcodeResultItem res = decodeRes[index];
-
-    return ListTileTheme(
-        textColor: Colors.white,
-        // tileColor: Colors.green,
-        child: ListTile(
-          title: Text(res.text),
-          subtitle: Text(res.formatString),
-        ));
-  }
-
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _cameraEnhancer.close();
+    // Stop capturing before closing, then release the native instances.
+    // Leaving them alive keeps the camera bound on some devices, so the next
+    // scan screen cannot open it again.
     _cvr.stopCapturing();
+    _cameraEnhancer.close();
+    _cvr.dispose();
+    _cameraEnhancer.dispose();
     super.dispose();
   }
 
   Future<void> stop() async {
     _isCameraReady = false;
-    await _cameraEnhancer.close();
-    await _cvr.stopCapturing();
+    try {
+      await _cvr.stopCapturing();
+    } finally {
+      await _cameraEnhancer.close();
+    }
   }
 
   Future<void> start() async {
@@ -145,8 +113,21 @@ class _ScannerScreenState extends State<ScannerScreen>
     setState(() {});
 
     Future.delayed(const Duration(milliseconds: 100), () async {
-      await _cvr.startCapturing(EnumPresetTemplate.readBarcodes);
-      await _cameraEnhancer.open();
+      if (!mounted) return;
+      // Open the preview FIRST. startCapturing() can fail (an expired or
+      // unreachable trial license is the usual cause); if it throws before
+      // open() is awaited, the camera never opens and the screen stays black.
+      try {
+        await _cameraEnhancer.open();
+        await _cvr.startCapturing(EnumPresetTemplate.readBarcodes);
+      } catch (e) {
+        debugPrint('Camera/scan start failed: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not start scanning: $e')),
+          );
+        }
+      }
     });
   }
 
@@ -253,16 +234,11 @@ class _ScannerScreenState extends State<ScannerScreen>
         ],
       );
     } else {
+      // Fullscreen camera mode: the CustomPainter overlay already shows the
+      // decoded text and quadrilaterals, so no result list is stacked here.
       return Stack(
         children: [
           fullscreen,
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              itemBuilder: listItem,
-              itemCount: decodeRes.length,
-            ),
-          ),
           Positioned(
               bottom: 50,
               left: 50,
