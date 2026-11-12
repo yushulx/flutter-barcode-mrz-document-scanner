@@ -37,9 +37,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _cvr = CaptureVisionRouter();
     SimplifiedCaptureVisionSettings? currentSettings =
         await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);
-    if (_scanProvider.types != 0) {
-      currentSettings!.barcodeSettings!.barcodeFormatIds =
-          _scanProvider.types as BigInt;
+    if (_scanProvider.types != BigInt.zero) {
+      currentSettings!.barcodeSettings!.barcodeFormatIds = _scanProvider.types;
     } else {
       currentSettings!.barcodeSettings!.barcodeFormatIds =
           EnumBarcodeFormat.all;
@@ -79,12 +78,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 CapturedResult capturedResult = await _cvr.captureFile(
                     _file!, EnumPresetTemplate.readBarcodes);
                 _results = capturedResult.decodedBarcodesResult!.items ?? [];
-                for (var i = 0; i < _results.length; i++) {
-                  if (_scanProvider.results.containsKey(_results[i].text)) {
-                    continue;
-                  } else {
-                    _scanProvider.results[_results[i].text] = _results[i];
-                  }
+                for (final item in _results) {
+                  _scanProvider.addResult(item.text, item);
                 }
                 setState(() {});
               }
@@ -103,12 +98,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 CapturedResult capturedResult = await _cvr.captureFile(
                     _file!, EnumPresetTemplate.readBarcodes);
                 _results = capturedResult.decodedBarcodesResult!.items ?? [];
-                for (var i = 0; i < _results.length; i++) {
-                  if (_scanProvider.results.containsKey(_results[i].text)) {
-                    continue;
-                  } else {
-                    _scanProvider.results[_results[i].text] = _results[i];
-                  }
+                for (final item in _results) {
+                  _scanProvider.addResult(item.text, item);
                 }
                 setState(() {});
               }

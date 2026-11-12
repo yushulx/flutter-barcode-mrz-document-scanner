@@ -2,11 +2,11 @@ import 'package:dynamsoft_capture_vision_flutter/dynamsoft_capture_vision_flutte
 import 'package:flutter/foundation.dart';
 
 class ScanProvider extends ChangeNotifier {
-  int _types = 0;
+  BigInt _types = BigInt.zero;
 
-  int get types => _types;
+  BigInt get types => _types;
 
-  set types(int value) {
+  set types(BigInt value) {
     _types = value;
     notifyListeners();
   }
@@ -15,9 +15,14 @@ class ScanProvider extends ChangeNotifier {
 
   Map<String, BarcodeResultItem> get results => _results;
 
-  void addResult(String key, BarcodeResultItem result) {
+  /// Adds a barcode to the batch once. Live frames repeat the same code many
+  /// times, so the text value is the dedup key and listeners are notified only
+  /// when a genuinely new item arrives.
+  bool addResult(String key, BarcodeResultItem result) {
+    if (_results.containsKey(key)) return false;
     _results[key] = result;
     notifyListeners();
+    return true;
   }
 
   void clearResults() {

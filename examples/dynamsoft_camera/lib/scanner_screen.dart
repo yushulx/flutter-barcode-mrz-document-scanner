@@ -56,9 +56,8 @@ class _ScannerScreenState extends State<ScannerScreen>
 
     SimplifiedCaptureVisionSettings? currentSettings =
         await _cvr.getSimplifiedSettings(EnumPresetTemplate.readBarcodes);
-    if (_scanProvider.types != 0) {
-      currentSettings!.barcodeSettings!.barcodeFormatIds =
-          _scanProvider.types as BigInt;
+    if (_scanProvider.types != BigInt.zero) {
+      currentSettings!.barcodeSettings!.barcodeFormatIds = _scanProvider.types;
     } else {
       currentSettings!.barcodeSettings!.barcodeFormatIds =
           EnumBarcodeFormat.all;
@@ -80,12 +79,8 @@ class _ScannerScreenState extends State<ScannerScreen>
           if (Platform.isAndroid && isPortrait) {
             decodeRes = rotate90barcode(decodeRes, _previewHeight.toInt());
           }
-          for (var i = 0; i < decodeRes.length; i++) {
-            if (_scanProvider.results.containsKey(decodeRes[i].text)) {
-              continue;
-            } else {
-              _scanProvider.results[decodeRes[i].text] = decodeRes[i];
-            }
+          for (final item in decodeRes) {
+            _scanProvider.addResult(item.text, item);
           }
 
           setState(() {});
